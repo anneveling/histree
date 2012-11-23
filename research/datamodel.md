@@ -2,8 +2,8 @@
 Data model setup
 ======
 
-HistoryEvent:
-
+HistoryNode:
+<code>
 {
 	id: "12345434",
 	timestamp: 12343443, //ms since epoch
@@ -19,15 +19,17 @@ HistoryEvent:
 	parentId: "3434" //can be null
 	childrenIds: ["343","34"]
 }
+</code>
 
 key:
-- windowid
-- tab id
+* windowid
+* tab id
 
 
+<code>
 HistreeTab: {
 	key: windowid+"-"+tabid
 	currentEventId: 12343434
 
 }
-
+</code>
