@@ -24,7 +24,6 @@ function showStorageContent() {
 
 function init() {
   var histRoot = $('#history');
-
   $('#localStorageView button').click(showStorageContent);
 }
 
