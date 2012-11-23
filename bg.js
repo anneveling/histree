@@ -4,56 +4,6 @@ function log(s) {
   console.log(s);
 }
 
-// save to chrome.storage
-// add an id if we don't have one.
-// update if we have an id.
-function saveAsync(obj) {
-	console.log ("SAVING :" + obj.id);
-	console.log(obj);
-	
-
-	var node = {};
-	node[obj.id] = obj;
-
-	chrome.storage.local.set(node, function() {
-		if (chrome.runtime.lastError) {
-			console.log("ERROR : " + chrome.runtime.lastError.message())
-		}
-		console.log("stored " + obj.id);
-	})
-	
-}
-
-function save(obj) {
-	console.log("SAVING: "+obj.id);
-	localStorage[obj.id] = obj;
-
-}
-
-function getAsync(id, callback) {
-	console.log("GET-ASYNC: " + id);
-	chrome.storage.local.get(id, function(items) {
-		console.log("groetjes:" + items);
-		console.log(items);
-		callback(items[id]);
-	})
-}
-
-function get(id) {
-	console.log("GET: " + id);
-	var item = localStorage[id];
-	console.log(" returns: " + item);
-	console.log(item);
-	return item;
-}
-
-function getall(callback) {
-	for (var i=0; i<chrome.storage.local.length; i++) {
-		console.log('key: ' + chrome.storage.local.getKey(i));
-		console.log(chrome.storage.local[chrome.storage.local.getKey(i)]);
-		callback(chrome.storage.local);
-	}
-}
 
 
 // EVENTS 
