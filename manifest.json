@@ -15,5 +15,8 @@
     "tabs",
     "storage",
     "unlimitedStorage"
-  ]
+  ],
+  "chrome_url_overrides" : {
+    "history": "histree.html"
+  }
 }
