@@ -23,7 +23,7 @@ function get(id, callback) {
 	chrome.storage.local.get(id, function(items) {
 		console.log("groetjes:" + items);
 		console.log(items);
-		callback(items[id]);
+		if (callback) callback(items[id]);
 	})
 }
 
@@ -39,10 +39,25 @@ function getOrCreate(id, defaultObj, callback) {
 	});
 }
 
+function clear() {
+	chrome.storage.local.clear();
+}
+
 function getall(callback) {
-	for (var i=0; i<chrome.storage.local.length; i++) {
-		console.log('key: ' + chrome.storage.local.getKey(i));
-		console.log(chrome.storage.local[chrome.storage.local.getKey(i)]);
-		callback(chrome.storage.local);
-	}
+	console.log("GET ALL");
+
+	ret = [];
+
+	chrome.storage.local.get(null, function (items) {
+		console.log(items)
+		var ret = new Array(items.length);
+		i = 0;
+		for (key in items) {
+			ret[i] = items[key];
+			i++;
+		}
+		callback(ret);
+
+	});
+
 }
