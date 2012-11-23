@@ -1,0 +1,17 @@
+hr {
+	clear: both;
+}
+
+.treecontainer {
+	margin: 10px;
+	background-color: silver;
+	border: 1px solid red;
+	float: left;
+}
+.node {
+	border: 1px solid green;
+	margin: 10px;
+}
+.details {
+
+}
