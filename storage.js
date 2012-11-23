@@ -39,13 +39,17 @@ function getOrCreate(id, defaultObj, callback) {
 	});
 }
 
+function clear() {
+	chrome.storage.local.clear();
+}
+
 function getall(callback) {
 	console.log("GET ALL");
 
 	ret = [];
 
 	chrome.storage.local.get(null, function (items) {
-		console.log(Items)
+		console.log(items)
 		var ret = new Array(items.length);
 		i = 0;
 		for (key in items) {
