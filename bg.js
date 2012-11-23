@@ -73,28 +73,32 @@ function handleUpdate(tab) {
 		putTabState(tsAfter);
 
 		//maybe this tab already had something else open
+		var foundParent = false;
 		if (tsBefore) {
 			if (tsBefore.currentId) {
+				foundParent = true;
 				setParent(node, tsBefore.currentId);
 			}
 		}
+		if (!foundParent) {
+			//this was a new tab
+			//does this tab have an opener-tab-id?
+			if (tab.openerTabId) {
+				//assume same window?
+				//do we already know that tab?
+				var opener = findTabState(tab.windowId, tab.openerTabId);
+				if (!opener) {
+					opener = TabState(tab.windowId, tab.openerTabId);
+					putTabState(opener);
+				}
+				console.log("found opener tabstate: " + opener);
+				//if we already have a Node in that tab, use that one
+				if (opener.currentId) {
+					setParent(node, opener.currentId);
+				}
+			}	
+		}
 
-		//only if node does not have a parent yet TODO
-
-		//does this tab have an opener-tab-id?
-		/*if (tab.openerTabId) {
-			//assume same window?
-			var opener = findTabState(tab.windowId, tab.openerTabId);
-			if (!opener) {
-				opener = {};
-				opener.id = createTabStateId(tab.windowId, tab.openerTabId);
-				putTabState(opener);
-			}
-			console.log("found opener tabstate: " + opener);
-			if (opener.currentId) {
-				setParent(node, opener.currentId);
-			}
-		}	*/	
 	});
 
 }
