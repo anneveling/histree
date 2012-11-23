@@ -2,8 +2,7 @@
 // add an id if we don't have one.
 // update if we have an id.
 function save(obj,callback) {
-	console.log ("SAVING :" + obj.id);
-	console.log(obj);
+	console.log ("SAVING :" + obj.id + " obj:" + JSON.stringify(obj));
 
 	var node = {};
 	node[obj.id] = obj;
@@ -12,8 +11,8 @@ function save(obj,callback) {
 		if (chrome.runtime.lastError) {
 			console.log("ERROR : " + chrome.runtime.lastError.message())
 		}
+    console.log("stored " + obj.id + " calling callback");
 		if (callback) callback();
-		console.log("stored " + obj.id);
 	})
 	
 }
@@ -43,18 +42,18 @@ function clear() {
 	chrome.storage.local.clear();
 }
 
-function getall(callback) {
+function getall(callback,filter) {
 	console.log("GET ALL");
 
-	ret = [];
+	var ret = [];
 
 	chrome.storage.local.get(null, function (items) {
-		console.log(items)
-		var ret = new Array(items.length);
-		i = 0;
-		for (key in items) {
-			ret[i] = items[key];
-			i++;
+		var ret = [];
+		for (var key in items) {
+			var o = items[key];
+			if (!filter || filter(0)) {
+        ret.push(o);
+      }
 		}
 		callback(ret);
 
