@@ -49,7 +49,7 @@ function node2html(node,parent) {
 
 }
 
-function buildSubTree(parent, filter) {
+function buildSubTree(parent,filter) {
   var ul = $(document.createElement("ul"));
   parent.append(ul);
   getAllNodes(function (nodes) {
@@ -66,6 +66,8 @@ function buildHistoryTree() {
 }
 
 function init() {
+
+
   buildHistoryTree();
 
   $('#showStorage').click(showStorageContent);

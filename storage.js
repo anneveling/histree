@@ -69,3 +69,15 @@ function getAllNodes(callback,filter) {
   })
 }
 
+function getAllRootNodes(callback) {
+	return getAllNodes(callback, function(node) {
+		return (!node.parentId);
+	});	
+}
+
+function getChildrenNodesOf(parent, callback) {
+	return getAllNodes(callback, function(node) {
+		return (node.parentId == parent.id);
+	});
+}
+
