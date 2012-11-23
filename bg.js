@@ -5,7 +5,6 @@ function log(s) {
 }
 
 
-
 // EVENTS 
 
 function now() {
@@ -20,16 +19,13 @@ function createTabStateId(windowId, tabId) {
 	return windowId + "-" + tabId;
 }
 
-function findTabState(windowId, tabId) {
-	var tsi = createTabStateId(windowId, tabId);
-	var found = get(tsi);
-	if (!found) {
-		found = new Object();
-		found.id = tsi;
-		found.windowId = windowId;
-		found.tabId = tabId;
-	}
-	return found;
+function findTabState(windowId, tabId, callback) {
+	var ts = {};
+	ts.id = createTabStateId(windowId, tabId);
+	ts.windowId = windowId;
+	ts.tabId = tabId;
+
+	getOrCreate(ts.id, ts, callback);
 }
 
 chrome.browserAction.onClicked.addListener(function(tab) {
@@ -58,25 +54,29 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
 		node.childrenIds = new Array();
 
-		//find the parent node if we have one
+		save(node, function() {
+			//find the parent node if we have one
 
-		//does this tab have an opener-tab-id?
-		if (tab.openerTabId) {
-			//assume same window?
-			var opener = findTabState(tab.windowId, tab.openerTabId);
-			if (opener) {
-				console.log("found opener tabstate: " + opener);
-				if (opener.currentId) {
-					node.parentId = opener.currentId;
-
-					var c = get(opener.currentId);
-					c.childrenIds.push(node.id);
-					save(c);
-				}
+			//does this tab have an opener-tab-id?
+			if (tab.openerTabId) {
+				//assume same window?
+				findTabState(tab.windowId, tab.openerTabId, function(opener) {
+					console.log("found opener tabstate: " + opener);
+					if (opener.currentId) {
+						node.parentId = opener.currentId;
+						save(node, function() {
+							get(opener.currentId, function(c) {
+								c.childrenIds.push(node.id);
+								save(c);
+							});
+						});
+					}
+				});
 			}
-		}
+		});
+
 		//TODO check if this order is ok
-		if (!node.parentId) {
+		/*if (!node.parentId) {
 			//maybe this tab already had something else open
 			//we are going to assume that is this node's parent then
 			var prev = findTabState(tab.windowId, tab.id);
@@ -92,12 +92,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 			}
 		}
 
-		save(node);
+		save(node);&*/
 
 		//update the TabState for this window and tab
-		var thisState = findTabState(tab.windowId, tab.id);
-		thisState.currentId = node.id;
-		save(thisState);
+		findTabState(tab.windowId, tab.id, function(thisState) {
+			thisState.currentId = node.id;
+			save(thisState);
+		});
 
 	}
 		
