@@ -28,6 +28,17 @@ function findTabState(windowId, tabId, callback) {
 	getOrCreate(ts.id, ts, callback);
 }
 
+function setParent(node, parentId) {
+	node.parentId = parentId;
+
+	save(node, function() {
+		get(parentId, function(c) {
+			c.childrenIds.push(node.id);
+			save(c);
+		});
+	});	
+}
+
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.create({'url': chrome.extension.getURL('histree.html')}, function(tab) {
     // Tab opened.
@@ -57,44 +68,31 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 		save(node, function() {
 			//find the parent node if we have one
 
+			//maybe this tab already had something else open
+			//we are going to assume that is this node's parent then
+			findTabState(tab.windowId, tab.id, function(prev) {
+				console.log("found previous tabstate for this tab: " + prev);
+				if (prev.currentId) {
+					setParent(node, prev.currentId);
+				}
+			});
+
+			//only if node does not have a parent yet TODO
+
 			//does this tab have an opener-tab-id?
 			if (tab.openerTabId) {
 				//assume same window?
 				findTabState(tab.windowId, tab.openerTabId, function(opener) {
 					console.log("found opener tabstate: " + opener);
 					if (opener.currentId) {
-						node.parentId = opener.currentId;
-						save(node, function() {
-							get(opener.currentId, function(c) {
-								c.childrenIds.push(node.id);
-								save(c);
-							});
-						});
+						setParent(node, opener.currentId);
 					}
 				});
 			}
 		});
 
-		//TODO check if this order is ok
-		/*if (!node.parentId) {
-			//maybe this tab already had something else open
-			//we are going to assume that is this node's parent then
-			var prev = findTabState(tab.windowId, tab.id);
-			if (prev) {
-				console.log("found previous tabstate for this tab: " + prev);
-				if (prev.currentId) {
-					node.parentId = prev.currentId;
-
-					var c = get(prev.currentId);
-					c.childrenIds.push(node.id);
-					save(c);
-				}
-			}
-		}
-
-		save(node);&*/
-
 		//update the TabState for this window and tab
+		//TODO only after the other is ready
 		findTabState(tab.windowId, tab.id, function(thisState) {
 			thisState.currentId = node.id;
 			save(thisState);
