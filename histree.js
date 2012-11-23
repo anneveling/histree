@@ -13,7 +13,7 @@ function showStorageContent() {
   content.html();
   var ul = $(document.createElement("ul"));
   content.append(ul);
-  mockGetAll(function(nodes) {
+  getall(function(nodes) {
     $.each(nodes,function (i,node){
       var li = $(document.createElement("li"));
       li.text(JSON.stringify(node));
@@ -22,9 +22,15 @@ function showStorageContent() {
   });
 }
 
+function clearStorage() {
+  clear();
+  showStorageContent();
+}
+
 function init() {
   var histRoot = $('#history');
-  $('#localStorageView button').click(showStorageContent);
+  $('#showStorage').click(showStorageContent);
+  $('#clearStorage').click(clearStorage);
 }
 
 $(document).ready(init);
