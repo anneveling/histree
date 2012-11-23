@@ -21,7 +21,7 @@ function getSizeForTree(tree) {
   return { height: levelsWidth.length * (50+200), width: Math.max.apply(this,levelsWidth) * 30 };
 }
 
-function drawTree(container,tree) {
+function drawTree(container,rootNode) {
   var st = new $jit.ST({
           injectInto: container.attr("id"),
           orientation: "bottom" ,
@@ -30,6 +30,7 @@ function drawTree(container,tree) {
           //set animation transition type
           transition: $jit.Trans.linear,
           //set distance between node and its children
+          levelsToShow : 32000,
           levelDistance: 50,
           Node: {
               height: 20,
@@ -43,6 +44,13 @@ function drawTree(container,tree) {
 //              autoWidth: true
           },
 
+//          request: function(nodeId, level, onComplete) {
+//
+//            getWithChildren(nodeId,function (node) {
+//                    onComplete.onComplete(nodeId, node);
+//                });
+//           },
+
           Edge: {
               type: 'bezier',
               lineWidth: 2,
@@ -52,7 +60,10 @@ function drawTree(container,tree) {
 
           onCreateLabel: function(label, node){
               label.id = node.id;
-              label.innerHTML = node.id; // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
+              label.innerHTML = '<a href="'+node.url+'" target="_blank">'+node.id+'</a>'; // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
+//            label.onclick = function(){
+//                            st.onClick(node.id);
+//                        };
               var style = label.style;
               style.width = 200 + 'px';
               style.height = 17 + 'px';
@@ -63,12 +74,24 @@ function drawTree(container,tree) {
               style.textAlign= 'center';
               style.textDecoration = 'underline';
               style.paddingTop = '3px';
-          }
+          },
+
+//          onAfterPlotNode: function(node) {
+//            st.onClick(node.id);
+//          }
 
 
       });
-  st.loadJSON(tree);
+  st.loadJSON(rootNode);
   st.compute();
   st.select(st.root);
 
+  function addNode(node) {
+    getWithChildren(node.id,function (node) {
+                       st.addSubtree(node,"animate");
+                       $.each(node.children,function (i,child) { addNode(child);});
+                   });
+  }
+
+  addNode(rootNode);
 }

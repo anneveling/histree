@@ -18,7 +18,7 @@ function save(obj,callback) {
 }
 
 function get(id, callback) {
-	//console.log("GET-ASYNC: " + id);
+	console.log("GET-ASYNC: " + id);
 	chrome.storage.local.get(id, function(items) {
 		//console.log("groetjes:" + items);
 		//console.log(items);
@@ -79,6 +79,15 @@ function getChildrenNodesOf(parent, callback) {
 	return getAllNodes(callback, function(node) {
 		return (node.parentId == parent.id);
 	});
+}
+
+function getWithChildren(parentId,callback) {
+  get(parentId,function (node) {
+        getChildrenNodesOf(node,function (childs) {
+            node.children = childs;
+          callback(node)
+        })
+      });
 }
 
 

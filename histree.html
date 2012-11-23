@@ -2,14 +2,17 @@
 	<head>
 		<title>Histree 1.0</title>
         <link href="lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-        <link href="histree.css" type="text/css" rel="stylesheet" />
 	</head>
 	<body>
         <div class="offset1">
         <div class="page-header">
-            <h1>Histree</h1>
+            <h1>Hello from histree!</h1>
         </div>
-        <div id="history"></div>
+        <label>Root ID:</label>
+        <input id="rootId" type="text" value="h1353712045293_-888485529" placeholder="Type somethingÉ" />
+        <button id="drawRoot" class="btn btn-primary">GOOOOOOOO!</button>
+
+        <div id="history" style="height: 1000px;"></div>
 
         <hr/>
         <div class="container">
@@ -30,6 +33,7 @@
         <script src="lib/bootstrap/js/bootstrap.min.js"></script>
         <script src="models.js"></script>
         <script src="storage.js"></script>
+        <script src="lib/jit.js"></script>
         <script src="vis.js"></script>
         <script src="histree.js"></script>
 

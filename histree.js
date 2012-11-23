@@ -1,4 +1,17 @@
+
+function mockGetAll(callback) {
+  callback([HistoryNode("http://www.google.com/?q=yes","YES"),HistoryNode("http://www.google.com/?q=we","WE"),
+            HistoryNode("http://www.google.com/?q=can","CAN")
+           ]
+  );
+}
+
 function showStorageContent() {
+  var content = $('#localStorageView .content');
+
+  content.html('');
+  var ul = $(document.createElement("ul"));
+  content.append(ul);
   getall(function(nodes) {
     $.each(nodes,function (i,node){
       console.log(node);
@@ -11,28 +24,20 @@ function clearStorage() {
   showStorageContent();
 }
 
-function buildHistoryTree() {
-  $('#history').html('');
-
-  getAllRootNodes(function(nodes) {
-    $.each(nodes, function (i, node) {
-      console.log("adding div for root node: " + node.id);
-      console.log(node);
-
-      var dimensions = getSizeForTree(node);
-      var c = $(document.createElement("div")).addClass("treecontainer");
-      c.attr("id", node.id);
-      c.width(dimensions.width);
-      c.height(dimensions.height);
-
-      $('#history').append(c);
-    });
-  });  
-}
 
 
 function init() {
-  buildHistoryTree();
+
+  $('#drawRoot').click(function (event) {
+    var rootid =$('#rootId').val();
+    getWithChildren(rootid,function (root) {
+            drawTree($('#history'),root);
+        });
+    return false;
+  });
+ //console.log(getSizeForTree(tree));
+
+
 
   $('#showStorage').click(showStorageContent);
   $('#clearStorage').click(clearStorage);
