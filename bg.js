@@ -7,11 +7,6 @@ function save(obj) {
 	console.log ("SAVING :" + obj.id);
 	console.log(obj);
 	
-	if (!obj.id) {
-		// create a new id.
-		console.log ("create new id");
-		obj.id = new Date().getTime();
-	}
 
 	var node = {};
 	node[obj.id] = obj;
@@ -25,11 +20,12 @@ function save(obj) {
 	
 }
 
-function get(id) {
+function get(id, callback) {
 	console.log("GET: " + id);
 	chrome.storage.local.get(id, function(items) {
 		console.log("groetjes:" + items);
 		console.log(items);
+		callback(items[id]);
 	})
 }
 
