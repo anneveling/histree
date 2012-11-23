@@ -4,7 +4,6 @@
 function save(obj,callback) {
 	console.log ("SAVING :" + obj.id);
 	console.log(obj);
-	
 
 	var node = {};
 	node[obj.id] = obj;
@@ -26,6 +25,18 @@ function get(id, callback) {
 		console.log(items);
 		if (callback) callback(items[id]);
 	})
+}
+
+function getOrCreate(id, defaultObj, callback) {
+	chrome.storage.local.get(id, function(items) {
+		console.log("getOrCreate found: ");
+		console.log(items);
+		if (items[id]) {
+			callback(items[id]);
+		} else {
+			callback(defaultObj);
+		}
+	});
 }
 
 function getall(callback) {
