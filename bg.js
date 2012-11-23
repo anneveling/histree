@@ -62,7 +62,7 @@ function handleUpdate(tab) {
 	//marked as handled
 
 
-	var node = HistoryNode(tab);
+	var node = makeHistoryNodeFromTab(tab);
 
 	save(node, function() {
 

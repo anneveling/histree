@@ -1,5 +1,5 @@
 //not really object oriented because we get basic objects back from the storage
-function HistoryNode(tab) {
+function HistoryNode(url,title) {
   var n = now();
 
   return {
@@ -7,14 +7,18 @@ function HistoryNode(tab) {
   	_mv : 0,
   	_type : "hnode",
   	timestamp : n,
-  	url : tab.url,
-  	title : tab.title,
-  	windowId : tab.windowId,
-  	tabId : tab.id,
-  	childrenIds : new Array()
+  	"url" : url,
+  	"title" : title,
+  	childrenIds : []
   };
 }
 
+function makeHistoryNodeFromTab(tab) {
+  var node = HistoryNode(tab.url,tab.title);
+  node.windowId = tab.windowId;
+  node.tabId = tab.id;
+  return node;
+}
 
 //TabState
 function makeTabStateId(windowId, tabId) {
