@@ -5,6 +5,7 @@
 // update if we have an id.
 function save(obj) {
 	console.log ("SAVING :" + obj.id);
+	console.log(obj);
 	
 	if (!obj.id) {
 		// create a new id.
@@ -12,18 +13,22 @@ function save(obj) {
 		obj.id = new Date().getTime();
 	}
 
-	chrome.storage.local.set(obj, function() {
+	var node = {};
+	node[obj.id] = obj;
+
+	chrome.storage.local.set(node, function() {
 		if (chrome.runtime.lastError) {
 			console.log("ERROR : " + chrome.runtime.lastError.message())
 		}
 		console.log("stored " + obj.id);
-		return obj.id;
 	})
 	
 }
 
-function get(key) {
-	chrome.storage.local.get(key, function(items) {
+function get(id) {
+	console.log("GET: " + id);
+	chrome.storage.local.get(id, function(items) {
+		console.log("groetjes:" + items);
 		console.log(items);
 	})
 }
