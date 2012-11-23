@@ -1,3 +1,9 @@
+
+
+function now() {
+	return new Date().getTime();
+}
+
 //not really object oriented because we get basic objects back from the storage
 function HistoryNode(url,title) {
   var n = now();

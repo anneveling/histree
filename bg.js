@@ -20,15 +20,6 @@ function putTabState(ts) {
 
 // UTILITIES
 
-function now() {
-	return new Date().getTime();
-}
-
-function generateId() {
-	return "h" + now();
-}
-
-
 function setParent(node, parentId) {
 	node.parentId = parentId;
 
