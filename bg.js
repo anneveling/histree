@@ -54,7 +54,7 @@ function handleUpdate(tab) {
 			return;
 		}
 	}
-	
+
 	console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
 
 
@@ -66,18 +66,7 @@ function handleUpdate(tab) {
 	//marked as handled
 
 
-	var node = {};
-	node.id = generateId();
-	node.timestamp = now();
-	node._type = "hnode";
-		
-	node.windowId = tab.windowId;
-	node.tabId = tab.id;
-		
-	node.url = tab.url;
-	node.title = tab.title;
-
-	node.childrenIds = new Array();
+	var node = new HistoryNode(tab);
 
 	save(node, function() {
 		//find the parent node if we have one
