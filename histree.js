@@ -17,36 +17,19 @@ function create(tag) {
 
 function buildNode(parent, node) {
 
-  //n is the main node container, in the parent
-  var n = create("span").addClass("node");
-
-  var details = create("div").addClass("details").appendTo(n);
+  var details = create("div").addClass("details");
 
   var title = node.title;
   if (title == "") {
     title = "(no title)";
   }
-  if (title.length > 20) {
-    title = title.substr(0,20)+ "...";
+  if (title.length > 40) {
+    title = title.substr(0,40)+ "...";
   }
-  create("a").text("n " + title).attr("href",node.url).appendTo(details);
+  create("a").text(title).attr("href",node.url).appendTo(details);
 
-  parent.append(n);
 
-  //draw children too
-  var celtid = "cs_"+node.id;
-  var childrenElt = create("div").addClass("nodes").attr("id",celtid);
-
-  //n.append(create("br"));
-  n.append(childrenElt);
-
-  for (var i=0; i < node.childrenIds.length; i++) {
-    var childId = node.childrenIds[i];
-
-    get(childId, function(child) {
-      buildNode(childrenElt, child);
-    });
-  }
+  parent.append(details);
 }
 
 function buildHistoryTree() {
@@ -57,10 +40,16 @@ function buildHistoryTree() {
       console.log("adding div for root node: " + node.id);
       console.log(node);
 
+      var w = 400;
+      var h = 800;
+
       var c = create("div").addClass("treecontainer");
       var cid = "c_"+node.id;
       c.attr("id", cid);
-     $('#history').append(c);
+      c.width(w);
+      c.height(h);
+
+      $('#history').append(c);
 
       buildNode(c, node);
 

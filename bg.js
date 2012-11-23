@@ -19,16 +19,8 @@ function putTabState(ts) {
 }
 
 // UTILITIES
-
-function setParent(node, parentId) {
-	node.parentId = parentId;
-
-	save(node, function() {
-		get(parentId, function(c) {
-			c.childrenIds.push(node.id);
-			save(c);
-		});
-	});	
+function addChild(parent, child) {
+	parent.children.push(child);
 }
 
 function handleUpdate(tab) {
@@ -52,45 +44,52 @@ function handleUpdate(tab) {
 	putTabState(tsAfter);
 	//marked as handled
 
-
 	var node = makeHistoryNodeFromTab(tab);
 
-	save(node, function() {
+	//where do we need to add this as a child?
+	
+	//maybe this tab already had something else open
+	var newRoot = node; //until we find something else
 
-		//find the parent node if we have one
+	var foundParent = false;
+	if (tsBefore) {
+		if (tsBefore.currentNode && (tsBefore.currentNode.id != node.id)) {
+			foundParent = true;
+			addChild(tsBefore.currentNode, node);
+			//save the entire tree from the root
+			newRoot = tsBefore.currentRoot;
+			save(tsBefore.currentRoot);
+		}
+	}
 
-		//mark this tab now has this child
-		tsAfter.currentId = node.id;
-		putTabState(tsAfter);
-
-		//maybe this tab already had something else open
-		var foundParent = false;
-		if (tsBefore) {
-			if (tsBefore.currentId && (tsBefore.currentId != node.id)) {
-				foundParent = true;
-				setParent(node, tsBefore.currentId);
+	if (!foundParent) {
+		//this was a new tab
+		//does this tab have an opener-tab-id?
+		if (tab.openerTabId) {
+			//assume same window?
+			//do we already know that tab?
+			var opener = findTabState(tab.windowId, tab.openerTabId);
+			if (!opener) {
+				opener = TabState(tab.windowId, tab.openerTabId);
+				putTabState(opener);
 			}
-		}
-		if (!foundParent) {
-			//this was a new tab
-			//does this tab have an opener-tab-id?
-			if (tab.openerTabId) {
-				//assume same window?
-				//do we already know that tab?
-				var opener = findTabState(tab.windowId, tab.openerTabId);
-				if (!opener) {
-					opener = TabState(tab.windowId, tab.openerTabId);
-					putTabState(opener);
-				}
-				console.log("found opener tabstate: " + opener);
-				//if we already have a Node in that tab, use that one
-				if (opener.currentId && (opener.currentId != node.id)) {
-					setParent(node, opener.currentId);
-				}
-			}	
-		}
+			console.log("found opener tabstate: " + opener);
+			//if we already have a Node in that tab, use that one
+			if (opener.currentNode && (opener.currentNode.id != node.id)) {
+				foundParent = true;
+				addChild(opener.currentNode, node);
+				newRoot = opener.currentRoot;
+			}
+		}	
+	}
 
-	});
+	save(newRoot);
+
+	//always set these two things together
+	tsAfter.currentRoot = newRoot;
+	tsAfter.currentNode = node;
+	putTabState(tsAfter); 
+
 
 }
 

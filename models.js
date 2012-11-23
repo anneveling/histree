@@ -26,7 +26,7 @@ function HistoryNode(url,title) {
   	timestamp : n,
   	"url" : url,
   	"title" : title,
-  	childrenIds : []
+  	children : []
   };
 }
 

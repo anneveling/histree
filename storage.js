@@ -2,7 +2,8 @@
 // add an id if we don't have one.
 // update if we have an id.
 function save(obj,callback) {
-	console.log ("SAVING :" + obj.id + " obj:" + JSON.stringify(obj));
+	console.log ("SAVING :" + obj.id);
+	console.log(obj);
 
 	var node = {};
 	node[obj.id] = obj;
@@ -26,16 +27,6 @@ function get(id, callback) {
 			if (callback) callback(items[id]);
 		}
 	})
-}
-
-function getMaybe(id, callbackFound, callbackNotFound) {
-	chrome.storage.local.get(id, function(items) {
-		if (items[id]) {
-			if (callbackFound) callbackFound(items[id]);
-		} else {
-			if (callbackNotFound) callbackNotFound();
-		}
-	});
 }
 
 function clear() {
@@ -75,11 +66,6 @@ function getAllRootNodes(callback) {
 	});	
 }
 
-function getChildrenNodesOf(parent, callback) {
-	return getAllNodes(callback, function(node) {
-		return (node.parentId == parent.id);
-	});
-}
 
 
 
