@@ -63,8 +63,8 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	console.log("tab.onUpdated for tab-id: " + tabId);
-	console.log(changeInfo);
-	console.log(tab);
+	//console.log(changeInfo);
+	//console.log(tab);
 
 	if (changeInfo.status == "complete") {
 		console.log("tab.onUpdated COMPLETE");
@@ -79,6 +79,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 		node.url = tab.url;
 		node.title = tab.title;
 
+		node.childrenIds = new Array();
+
 		//find the parent node if we have one
 
 		//does this tab have an opener-tab-id?
@@ -87,8 +89,29 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 			var opener = findTabState(tab.windowId, tab.openerTabId);
 			if (opener) {
 				console.log("found opener tabstate: " + opener);
-				node.parentId = opener.id;
-				//TODO do children too
+				if (opener.currentId) {
+					node.parentId = opener.currentId;
+
+					var c = get(opener.currentId);
+					c.childrenIds.push(node.id);
+					save(c);
+				}
+			}
+		}
+		//TODO check if this order is ok
+		if (!node.parentId) {
+			//maybe this tab already had something else open
+			//we are going to assume that is this node's parent then
+			var prev = findTabState(tab.windowId, tab.id);
+			if (prev) {
+				console.log("found previous tabstate for this tab: " + prev);
+				if (prev.currentId) {
+					node.parentId = prev.currentId;
+
+					var c = get(prev.currentId);
+					c.childrenIds.push(node.id);
+					save(c);
+				}
 			}
 		}
 
