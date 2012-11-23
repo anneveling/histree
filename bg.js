@@ -1,5 +1,9 @@
 // STORAGE
 
+function log(s) {
+  console.log(s);
+}
+
 // save to chrome.storage
 // add an id if we don't have one.
 // update if we have an id.

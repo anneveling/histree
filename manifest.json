@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "Hello to yesterday",
   "background": {
-    "scripts": ["bg.js"],
+    "scripts": ["models.js","storage.js","bg.js"],
     "persistent": false
     },
   "browser_action": {

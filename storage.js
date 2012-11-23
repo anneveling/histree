@@ -21,7 +21,7 @@ function save(obj) {
 		return obj.id;
 	})
 	
-},
+}
 
 function get(key) {
 	chrome.storage.get(key, function(items) {
