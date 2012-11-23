@@ -13,7 +13,7 @@ function save(obj,callback) {
 		if (chrome.runtime.lastError) {
 			console.log("ERROR : " + chrome.runtime.lastError.message())
 		}
-		callback();
+		if (callback) callback();
 		console.log("stored " + obj.id);
 	})
 	
@@ -24,14 +24,25 @@ function get(id, callback) {
 	chrome.storage.local.get(id, function(items) {
 		console.log("groetjes:" + items);
 		console.log(items);
-		callback(items[id]);
+		if (callback) callback(items[id]);
 	})
 }
 
 function getall(callback) {
-	for (var i=0; i<chrome.storage.local.length; i++) {
-		console.log('key: ' + chrome.storage.local.getKey(i));
-		console.log(chrome.storage.local[chrome.storage.local.getKey(i)]);
-		callback(chrome.storage.local);
-	}
+	console.log("GET ALL");
+
+	ret = [];
+
+	chrome.storage.local.get(null, function (items) {
+		console.log(Items)
+		var ret = new Array(items.length);
+		i = 0;
+		for (key in items) {
+			ret[i] = items[key];
+			i++;
+		}
+		callback(ret);
+
+	});
+
 }

@@ -7,6 +7,7 @@ function mockGetAll(callback) {
 
 function init() {
   var histRoot = $('#history');
+  console.log("hello!");
   getall(function (items) {
     histRoot.html(items.length);
   });
