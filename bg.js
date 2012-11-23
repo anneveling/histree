@@ -43,6 +43,14 @@ function get(id) {
 	return item;
 }
 
+function getall(callback) {
+	for (var i=0; i<chrome.storage.local.length; i++) {
+		console.log('key: ' + chrome.storage.local.getKey(i));
+		console.log(chrome.storage.local[chrome.storage.local.getKey(i)]);
+		callback(chrome.storage.local);
+	}
+}
+
 
 // EVENTS 
 
