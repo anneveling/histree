@@ -28,12 +28,20 @@ function get(id, callback) {
 
 function getOrCreate(id, defaultObj, callback) {
 	chrome.storage.local.get(id, function(items) {
-		console.log("getOrCreate found: ");
-		console.log(items);
 		if (items[id]) {
 			callback(items[id]);
 		} else {
 			callback(defaultObj);
+		}
+	});
+}
+
+function getMaybe(id, callbackFound, callbackNotFound) {
+	chrome.storage.local.get(id, function(items) {
+		if (items[id]) {
+			if (callbackFound) callbackFound(items[id]);
+		} else {
+			if (callbackNotFound) callbackNotFound();
 		}
 	});
 }
