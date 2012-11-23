@@ -20,15 +20,6 @@ function putTabState(ts) {
 
 // UTILITIES
 
-function now() {
-	return new Date().getTime();
-}
-
-function generateId() {
-	return "h" + now();
-}
-
-
 function setParent(node, parentId) {
 	node.parentId = parentId;
 
@@ -62,7 +53,7 @@ function handleUpdate(tab) {
 	//marked as handled
 
 
-	var node = HistoryNode(tab);
+	var node = makeHistoryNodeFromTab(tab);
 
 	save(node, function() {
 
