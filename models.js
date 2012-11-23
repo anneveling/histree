@@ -1,21 +1,33 @@
-var HistoryNode = function (tab) {
+//not really object oriented because we get basic objects back from the storage
+function HistoryNode(tab) {
   var n = now();
 
-  this.id = "h" + n;
-  this._mv = 0;
-  this._type = "hnode";
-
-  this.timestamp = n;
-  this.url = tab.url;
-  this.title = tab.title;
-
-  this.windowId = tab.windowId;
-  this.tabId = tab.id;
-
-  this.childrenIds = new Array();
-
-  this.hello = function() {
-  	console.log("hello from " + this.id);
+  return {
+  	id : "h" + n,
+  	_mv : 0,
+  	_type : "hnode",
+  	timestamp : n,
+  	url : tab.url,
+  	title : tab.title,
+  	windowId : tab.windowId,
+  	tabId : tab.id,
+  	childrenIds : new Array()
   };
 }
+
+
+//TabState
+function makeTabStateId(windowId, tabId) {
+	return windowId + "-" + tabId;
+}
+function TabState(windowId, tabId) {
+	return {
+		id: makeTabStateId(windowId, tabId),
+		windowId: windowId,
+		tabId: tabId
+	};
+}
+
+
+
 

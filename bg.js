@@ -11,14 +11,11 @@ function log(s) {
 var tabStates = {};
 
 function findTabState(windowId, tabId) {
-	var tsid = createTabStateId(windowId, tabId);
+	var tsid = makeTabStateId(windowId, tabId);
 	return tabStates[tsid];
 }
 function putTabState(ts) {
 	tabStates[ts.id] = ts;
-}
-function createTabStateId(windowId, tabId) {
-	return windowId + "-" + tabId;
 }
 
 // UTILITIES
@@ -59,16 +56,16 @@ function handleUpdate(tab) {
 
 
 	//we are here, so we will be handling this
-	var tsAfter = {};
-	tsAfter.id = createTabStateId(tab.windowId, tab.id);
+	var tsAfter = TabState(tab.windowId, tab.id);
 	tsAfter.url = tab.url;
 	putTabState(tsAfter);
 	//marked as handled
 
 
-	var node = new HistoryNode(tab);
+	var node = HistoryNode(tab);
 
 	save(node, function() {
+
 		//find the parent node if we have one
 
 		//mark this tab now has this child
