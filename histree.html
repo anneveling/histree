@@ -1,22 +1,36 @@
 <html>
 	<head>
 		<title>Histree 1.0</title>
+        <link href="lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+        <div class="offset1">
+        <div class="page-header">
+            <h1>Hello from histree!</h1>
+        </div>
+        <div id="history"></div>
+
+        <hr/>
+        <div class="container">
+            <div id="localStorageView" class="hero-unit">
+                <h1>Don't click this!</h1>
+                <p>geek zone</p>
+                <p>
+                <button id="showStorage" class="btn btn-info">Dump local storage</button>
+                <button id="clearStorage" class="btn btn-danger">Clear</button>
+                </p>
+            </div>
+        </div>
+
+        </div>
+
+
         <script src="lib/jquery-1.8.3.min.js" ></script>
+        <script src="lib/bootstrap/js/bootstrap.min.js"></script>
         <script src="models.js"></script>
         <script src="bg.js"></script>
         <script src="storage.js"></script>
         <script src="histree.js"></script>
-	</head>
-	<body>
-		<h1>Hello from histree!</h1>
-        <div id="history"></div>
-
-
-        <div id="localStorageView">
-            <button id="showStorage">Show local storage</button><button id="clearStorage">Clear</button>
-            <div class="content"></div>
-
-        </div>
 
 	</body>
 </html>

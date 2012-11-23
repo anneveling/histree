@@ -15,9 +15,7 @@ function showStorageContent() {
   content.append(ul);
   getall(function(nodes) {
     $.each(nodes,function (i,node){
-      var li = $(document.createElement("li"));
-      li.text(JSON.stringify(node));
-      ul.append(li);
+      console.log(node);
     });
   });
 }
