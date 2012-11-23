@@ -11,18 +11,20 @@ function save(obj,callback) {
 		if (chrome.runtime.lastError) {
 			console.log("ERROR : " + chrome.runtime.lastError.message())
 		}
-    console.log("stored " + obj.id + " calling callback");
+    	console.log("stored " + obj.id + ", calling callback");
 		if (callback) callback();
 	})
 	
 }
 
 function get(id, callback) {
-	console.log("GET-ASYNC: " + id);
+	//console.log("GET-ASYNC: " + id);
 	chrome.storage.local.get(id, function(items) {
-		console.log("groetjes:" + items);
-		console.log(items);
-		if (callback) callback(items[id]);
+		//console.log("groetjes:" + items);
+		//console.log(items);
+		if (items[id]) {
+			if (callback) callback(items[id]);
+		}
 	})
 }
 

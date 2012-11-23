@@ -46,22 +46,30 @@ function setParent(node, parentId) {
 function handleUpdate(tab) {
 
 	//see if another event has already handled this event
-	var ts = findTabState(tab.windowId, tab.id);
-	if (ts && ts.url == tab.url) {
-		console.log("sorry, but this event was already handled. ignoring");
-		return;
+	//console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
+	var tsBefore = findTabState(tab.windowId, tab.id);
+	if (tsBefore) {
+		if (tsBefore.url == tab.url) {
+			//console.log("sorry, but this event was already handled. ignoring");
+			return;
+		}
 	}
-	//mark we're handling this
-	ts = {};
-	ts.id = createTabStateId(tab.windowId, tab.id);
-	ts.url = tab.url;
+	
+	console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
 
-	putTabState(ts);
+
+	//we are here, so we will be handling this
+	var tsAfter = {};
+	tsAfter.id = createTabStateId(tab.windowId, tab.id);
+	tsAfter.url = tab.url;
+	putTabState(tsAfter);
+	//marked as handled
+
 
 	var node = {};
 	node.id = generateId();
 	node.timestamp = now();
-  node._type = "hnode";
+	node._type = "hnode";
 		
 	node.windowId = tab.windowId;
 	node.tabId = tab.id;
@@ -75,32 +83,32 @@ function handleUpdate(tab) {
 		//find the parent node if we have one
 
 		//mark this tab now has this child
-		ts.currentId = node.id;
-		putTabState(ts);
+		tsAfter.currentId = node.id;
+		putTabState(tsAfter);
 
 		//maybe this tab already had something else open
-		//we are going to assume that is this node's parent then
-		var prev = findTabState(tab.windowId, tab.id);
-		if (prev) {
-			console.log("found previous tabstate for this tab: " + prev);
-			if (prev.currentId) {
-				setParent(node, prev.currentId);
+		if (tsBefore) {
+			if (tsBefore.currentId) {
+				setParent(node, tsBefore.currentId);
 			}
 		}
 
 		//only if node does not have a parent yet TODO
 
 		//does this tab have an opener-tab-id?
-		if (tab.openerTabId) {
+		/*if (tab.openerTabId) {
 			//assume same window?
-			var opener = findTabState(tab.windowId, tab.id);
-			if (opener) {
-				console.log("found opener tabstate: " + opener);
-				if (opener.currentId) {
-					setParent(node, opener.currentId);
-				}
+			var opener = findTabState(tab.windowId, tab.openerTabId);
+			if (!opener) {
+				opener = {};
+				opener.id = createTabStateId(tab.windowId, tab.openerTabId);
+				putTabState(opener);
 			}
-		}		
+			console.log("found opener tabstate: " + opener);
+			if (opener.currentId) {
+				setParent(node, opener.currentId);
+			}
+		}	*/	
 	});
 
 }
@@ -112,12 +120,12 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	console.log("tab.onUpdated for tab-id: " + tabId);
-	console.log(changeInfo);
-	console.log(tab);
+	//console.log("tab.onUpdated for tab-id: " + tabId);
+	//console.log(changeInfo);
+	//console.log(tab);
 
 	if (changeInfo.status == "complete") {
-		console.log("tab.onUpdated COMPLETE");
+		//console.log("tab.onUpdated COMPLETE");
 
 		handleUpdate(tab);
 	}
