@@ -3,7 +3,7 @@
 // save to chrome.storage
 // add an id if we don't have one.
 // update if we have an id.
-function save(obj) {
+function saveAsync(obj) {
 	console.log ("SAVING :" + obj.id);
 	console.log(obj);
 	
@@ -20,13 +20,27 @@ function save(obj) {
 	
 }
 
-function get(id, callback) {
-	console.log("GET: " + id);
+function save(obj) {
+	console.log("SAVING: "+obj.id);
+	localStorage[obj.id] = obj;
+
+}
+
+function getAsync(id, callback) {
+	console.log("GET-ASYNC: " + id);
 	chrome.storage.local.get(id, function(items) {
 		console.log("groetjes:" + items);
 		console.log(items);
 		callback(items[id]);
 	})
+}
+
+function get(id) {
+	console.log("GET: " + id);
+	var item = localStorage[id];
+	console.log(" returns: " + item);
+	console.log(item);
+	return item;
 }
 
 
