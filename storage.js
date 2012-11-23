@@ -59,7 +59,7 @@ function getall(callback,filter) {
 		var ret = [];
 		for (var key in items) {
 			var o = items[key];
-			if (!filter || filter(0)) {
+			if (!filter || filter(o)) {
         ret.push(o);
       }
 		}
@@ -67,4 +67,11 @@ function getall(callback,filter) {
 
 	});
 
+}
+
+function getAllNodes(callback,filter) {
+  return getall(callback,function (node) {
+    if (node._type != "hnode") return false;
+    return filter(node);
+  })
 }

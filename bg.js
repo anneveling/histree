@@ -51,6 +51,7 @@ function handleUpdate(tab) {
 	var node = {};
 	node.id = generateId();
 	node.timestamp = now();
+  node._type = "hnode";
 		
 	node.windowId = tab.windowId;
 	node.tabId = tab.id;

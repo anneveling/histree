@@ -27,8 +27,51 @@ function clearStorage() {
   showStorageContent();
 }
 
+function node2html(node,parent) {
+  var li = $(document.createElement("li")),
+      a =  $(document.createElement("a"));
+
+  parent.append(li);
+
+  a.attr("href",node.url);
+  a.text(node.title);
+  li.append(a);
+  li.append($(' <span class="visited"> ('+ (new Date(node.timestamp)).toTimeString() +')</span> &nbsp; '));
+
+  a = $(document.createElement("a"));
+  li.append(a);
+  a.text("+");
+  a.attr("href","#");
+  a.click(function (event) {
+      buildSubTree(li,function (n) { return n.parentId == node.parentId; });
+      return false;
+  });
+
+
+
+}
+
+function buildSubTree(parent,filter) {
+  var ul = $(document.createElement("ul"));
+  parent.append(ul);
+  getAllNodes(function (nodes) {
+            $.each(nodes, function (i,node) {
+              node2html(node,ul);
+            })
+           },
+        filter
+  );
+}
+
+function buildHistoryTree() {
+  buildSubTree($('#history'),function (node) { return !node.parentId;  });
+}
+
 function init() {
-  var histRoot = $('#history');
+
+
+  buildHistoryTree();
+
   $('#showStorage').click(showStorageContent);
   $('#clearStorage').click(clearStorage);
 }
