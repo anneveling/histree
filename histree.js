@@ -10,7 +10,7 @@ function mockGetAll(callback) {
 function showStorageContent() {
   var content = $('#localStorageView .content');
 
-  content.html();
+  content.html('');
   var ul = $(document.createElement("ul"));
   content.append(ul);
   getall(function(nodes) {
