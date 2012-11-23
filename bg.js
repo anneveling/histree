@@ -75,7 +75,7 @@ function handleUpdate(tab) {
 		//maybe this tab already had something else open
 		var foundParent = false;
 		if (tsBefore) {
-			if (tsBefore.currentId) {
+			if (tsBefore.currentId && (tsBefore.currentId != node.id)) {
 				foundParent = true;
 				setParent(node, tsBefore.currentId);
 			}
@@ -93,7 +93,7 @@ function handleUpdate(tab) {
 				}
 				console.log("found opener tabstate: " + opener);
 				//if we already have a Node in that tab, use that one
-				if (opener.currentId) {
+				if (opener.currentId && (opener.currentId != node.id)) {
 					setParent(node, opener.currentId);
 				}
 			}	

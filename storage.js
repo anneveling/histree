@@ -28,16 +28,6 @@ function get(id, callback) {
 	})
 }
 
-function getOrCreate(id, defaultObj, callback) {
-	chrome.storage.local.get(id, function(items) {
-		if (items[id]) {
-			callback(items[id]);
-		} else {
-			callback(defaultObj);
-		}
-	});
-}
-
 function getMaybe(id, callbackFound, callbackNotFound) {
 	chrome.storage.local.get(id, function(items) {
 		if (items[id]) {
@@ -62,9 +52,10 @@ function getall(callback,filter) {
 		for (var key in items) {
 			var o = items[key];
 			if (!filter || filter(o)) {
-        ret.push(o);
-      }
+        		ret.push(o);
+      		}	
 		}
+		console.log("GET-all returns " + ret.length + " items");
 		callback(ret);
 
 	});
@@ -77,3 +68,4 @@ function getAllNodes(callback,filter) {
     return filter(node);
   })
 }
+

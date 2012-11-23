@@ -41,7 +41,7 @@ function node2html(node,parent) {
   a.text("+");
   a.attr("href","#");
   a.click(function (event) {
-      buildSubTree(li,function (n) { return n.parentId == node.parentId; });
+      buildSubTree(li,function (n) { return n.parentId == node.id; });
       return false;
   });
 
@@ -49,7 +49,7 @@ function node2html(node,parent) {
 
 }
 
-function buildSubTree(parent,filter) {
+function buildSubTree(parent, filter) {
   var ul = $(document.createElement("ul"));
   parent.append(ul);
   getAllNodes(function (nodes) {
@@ -66,8 +66,6 @@ function buildHistoryTree() {
 }
 
 function init() {
-
-
   buildHistoryTree();
 
   $('#showStorage').click(showStorageContent);
