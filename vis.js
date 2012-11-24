@@ -1,7 +1,7 @@
 
 
 var LABEL_WIDTH = 200;
-var LABEL_HEIGHT = 40;
+var LABEL_HEIGHT = 200;
 var LABEL_STEP = 50;
 
 //helpers
@@ -142,6 +142,8 @@ function drawTree(container,tree) {
 
               var details = $("<div/>").addClass("time").appendTo(header);
               details.text(showTime(node.data.timestamp));
+
+              var body = $("<div/>").addClass("body").appendTo(header);
 
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               
