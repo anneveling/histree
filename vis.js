@@ -128,20 +128,20 @@ function drawTree(container,tree) {
               var title = node.data.title;
               //recognize google query
               var url = node.data.url;
+              var isSpecial = false;
               if (url.indexOf("google.") != -1) {
               	//see if there is a 'q' parameter
               	var q = findQueryParameter(url, "q");
               	if (q) {
               		title = decodeURIComponent(q.replace(/\+/g, ' '));
               		header.addClass("query");
+              		isSpecial = true;
               	}
               }
               header.append($("<a/>").attr("href",node.data.url).attr("title",title).text(title));
 
               var details = $("<div/>").addClass("time").appendTo(header);
               details.text(showTime(node.data.timestamp));
-
-
 
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               
