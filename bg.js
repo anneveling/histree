@@ -8,16 +8,14 @@ function log(s) {
 // EVENTS 
 
 //tabstate
-//var tabStates = {};
+var GLOBAL_TAB_STATE_REGISTRY_WITH_FANCY_PERSISTENT_OBJECT_IDENTITY = {};
 
 function findTabState(windowId, tabId) {
 	var tsid = makeTabStateId(windowId, tabId);
-	return getObject(tsid);
-	//return tabStates[tsid];
+	return GLOBAL_TAB_STATE_REGISTRY_WITH_FANCY_PERSISTENT_OBJECT_IDENTITY[tsid];
 }
 function putTabState(ts) {
-	//tabStates[ts.id] = ts;
-	setObject(ts.id, ts);
+  GLOBAL_TAB_STATE_REGISTRY_WITH_FANCY_PERSISTENT_OBJECT_IDENTITY[ts.id] = ts;
 }
 
 // UTILITIES
@@ -28,86 +26,82 @@ function addChild(parent, child) {
 function handleUpdate(tab) {
 
 	//see if another event has already handled this event
-	//console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
-	var tsBefore = findTabState(tab.windowId, tab.id);
-	if (tsBefore) {
-		if (tsBefore.url == tab.url) {
-			//console.log("sorry, but this event was already handled. ignoring");
+	console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
+
+
+	var curTabState = findTabState(tab.windowId, tab.id);
+	if (curTabState) {
+		if (curTabState.url == tab.url) {
+			console.log("sorry, but this event was already handled. ignoring");
 			return;
 		}
+    curTabState.url = tab.url;
+    putTabState(curTabState); // store asap to avoid duplicates.
 	}
+  else {
+    curTabState =TabState(tab);
+    putTabState(curTabState); // save as quickly as possible so block duplicate events.
+    // do we need to link with root of original tab?
+    if (isNewEmptyTabUrl(tab.url)) {
+        console.log("New tab detected. Breaking cluster.")
+        return;
+    }
 
-	console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
-	//console.log(tab);
+    if (tab.openerTabId) {
+    	var opener = findTabState(tab.windowId, tab.openerTabId);
+      if (!opener) {
+        console.log("We don't know the opener id. Ignoring.")
+      }
+      else {
+        curTabState.currentRoot = opener.currentRoot;
+        curTabState.currentNode = opener.currentNode;
+        console.log("linked new tab to root: " + curTabState.currentRoot.url);
+        putTabState(curTabState);
+      }
+    }
+  }
 
+  if (!isUrlRelevantForHistree(tab.url)) {
+    console.log("Url not relevant for us: " + tab.url);
+    return;
+  }
 
-	//we are here, so we will be handling this
-	var tsAfter = TabState(tab.windowId, tab.id);
-	tsAfter.url = tab.url;
-	putTabState(tsAfter);
-	//marked as handled
+  var node = makeHistoryNodeFromTab(tab);
 
-	var node = makeHistoryNodeFromTab(tab);
+  if (curTabState.currentNode) {
+    console.log("Adding as child.");
+    addChild(curTabState.currentNode,node);
+    curTabState.currentNode = node;
+  }
+  else {
+    console.log("Starting a new root");
+    curTabState.currentNode = node;
+    curTabState.currentRoot = node;
+  }
 
-	//where do we need to add this as a child?
-	
-	//maybe this tab already had something else open
-	var newRoot = node; //until we find something else
+  putTabState(curTabState);
+  save(curTabState.currentRoot);
 
-	var foundParent = false;
-	if (tsBefore) {
-		if (tsBefore.currentNode && (tsBefore.currentNode.id != node.id)) {
-			foundParent = true;
-			addChild(tsBefore.currentNode, node);
-			//save the entire tree from the root
-			newRoot = tsBefore.currentRoot;
-		}
-	}
+  // schedule fav icon retrieval
+  var rootToStore = curTabState.currentRoot; // capture root to avoid multi-threading bugs.
+  setTimeout(function() {
+ 		chrome.tabs.get(tab.id, function(t) {
+ 			//if no change since
+ 			if (t.url == node.url) {
+ 				if (t.favIconUrl) {
+ 					if (t.favIconUrl != node.favIconUrl) {
+ 						//now updated
+ 						//chrome does this lazily...
+ 						node.favIconUrl = t.favIconUrl;
+ 						save(rootToStore);
+             console.log("Saved favicon for : " + node.url);
+ 					}
+ 				}
+ 				//console.log("favicon now is: "+ t.favIconUrl);
+ 			}
+ 		});
+ 	},500);
 
-	if (!foundParent) {
-		//this was a new tab
-		//does this tab have an opener-tab-id?
-		if (tab.openerTabId) {
-			//assume same window?
-			//do we already know that tab?
-			var opener = findTabState(tab.windowId, tab.openerTabId);
-			if (!opener) {
-				opener = TabState(tab.windowId, tab.openerTabId);
-				putTabState(opener);
-			}
-			console.log("found opener tabstate: " + opener);
-			//if we already have a Node in that tab, use that one
-			if (opener.currentNode && (opener.currentNode.id != node.id)) {
-				foundParent = true;
-				addChild(opener.currentNode, node);
-				newRoot = opener.currentRoot;
-			}
-		}	
-	}
-
-	save(newRoot);
-
-	//always set these two things together
-	tsAfter.currentRoot = newRoot;
-	tsAfter.currentNode = node;
-	putTabState(tsAfter); 
-
-	setTimeout(function() {
-		chrome.tabs.get(tab.id, function(t) {
-			//if no change since
-			if (t.url == tab.url) {
-				if (t.favIconUrl) {
-					if (t.favIconUrl != tab.favIconUrl) {
-						//now updated
-						//chrome does this lazily...
-						node.favIconUrl = t.favIconUrl;
-						save(newRoot);
-					}
-				}
-				//console.log("favicon now is: "+ t.favIconUrl);
-			}
-		});
-	},500);
 
 }
 

@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "Histree",
   "background": {
-    "scripts": ["models.js","storage.js","bg.js"],
+    "scripts": ["models.js","storage.js","urlcontrol.js","bg.js"],
     "persistent": false
     },
   "permissions": [

@@ -44,11 +44,12 @@ function makeHistoryNodeFromTab(tab) {
 function makeTabStateId(windowId, tabId) {
 	return windowId + "-" + tabId;
 }
-function TabState(windowId, tabId) {
+function TabState(tab) {
 	return {
-		id: makeTabStateId(windowId, tabId),
-		windowId: windowId,
-		tabId: tabId
+		id: makeTabStateId(tab.windowId, tab.id),
+		windowId: tab.windowId,
+		tabId: tab.id,
+    url : tab.url
 	};
 }
 
