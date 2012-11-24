@@ -18,7 +18,7 @@ function create(tag) {
 function lastTimeStamp(node) {
   var last = node.timestamp;
   for (var i=0; i < node.children.length; i++) {
-    last = Math.max(last, lastTimestamp(node));
+    last = Math.max(last, lastTimeStamp(node.children[i]));
   }
   return last;
 }
@@ -55,6 +55,16 @@ function buildHistoryTree() {
   $('#history').html('');
 
   getAllRootNodes(function(nodes) {
+    //sort by lastTimeStamp
+    //store lastTimeStamp on each node for sorting
+    for (var i=0; i < nodes.length; i++) {
+      var node = nodes[i];
+      node.lastTimeStamp = lastTimeStamp(node);
+    }
+    nodes.sort(function(a,b) {
+      return b.lastTimeStamp - a.lastTimeStamp;
+    });
+
     $.each(nodes, function (i, node) {
       console.log("adding div for root node: " + node.id);
       console.log(node);
