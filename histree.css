@@ -26,7 +26,7 @@ hr {
     border-radius: 4px;
 }
 .node:hover {
-    background-color: #c6c6c6;
+    background-color: white;
 }
 
 .node img {

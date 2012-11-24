@@ -1,7 +1,7 @@
 
 
 var LABEL_WIDTH = 200;
-var LABEL_HEIGHT = 40;
+var LABEL_HEIGHT = 200;
 var LABEL_STEP = 50;
 
 //helpers

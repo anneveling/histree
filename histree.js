@@ -60,7 +60,7 @@ function buildHistoryTree() {
     for (var i=0; i < nodes.length; i++) {
       var node = nodes[i];
       node.lastTimeStamp = lastTimeStamp(node);
-      node.lastHour = Math.floor(node.lastTimeStamp / (60 * 1000));
+      node.lastHour = Math.floor(node.lastTimeStamp / (60 * 60 * 1000));
     }
     nodes.sort(function(a,b) {
       return b.lastTimeStamp - a.lastTimeStamp;
