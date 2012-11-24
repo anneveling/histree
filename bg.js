@@ -8,14 +8,16 @@ function log(s) {
 // EVENTS 
 
 //tabstate
-var tabStates = {};
+//var tabStates = {};
 
 function findTabState(windowId, tabId) {
 	var tsid = makeTabStateId(windowId, tabId);
-	return tabStates[tsid];
+	return getObject(tsid);
+	//return tabStates[tsid];
 }
 function putTabState(ts) {
-	tabStates[ts.id] = ts;
+	//tabStates[ts.id] = ts;
+	setObject(ts.id, ts);
 }
 
 // UTILITIES
@@ -59,7 +61,6 @@ function handleUpdate(tab) {
 			addChild(tsBefore.currentNode, node);
 			//save the entire tree from the root
 			newRoot = tsBefore.currentRoot;
-			save(tsBefore.currentRoot);
 		}
 	}
 
@@ -83,12 +84,6 @@ function handleUpdate(tab) {
 			}
 		}	
 	}
-	//console.log("node favicon is now: "+node.favIconUrl);
-	//chrome.tabs.get(tab.id, function (ctab) {
-//		console.log("and now the favicon is: "+ctab.favIconUrl);
-//	});
-	//console.log("node is: ");
-	//console.log(node);
 
 	save(newRoot);
 

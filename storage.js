@@ -66,6 +66,39 @@ function getAllRootNodes(callback) {
 	});	
 }
 
+//localStorage version
+function clearStorage() {
+	localStorage.clear();
+}
+function storeObject(key, obj) {
+	localStorage.setItem(key, JSON.stringify(obj));
+}
+function getObject(key) {
+	var value = localStorage.getItem(key);
+    return value && JSON.parse(value);
+}
+function forObjectsWithKey(keyFilter, callback) {
+	for (var i=0; i < localStorage.length; i++) {
+		var key = localStorage.key(i);
+		if (keyFilter(key)) {
+			callback(getObject(key));
+		}
+	}
+}
+function forObjects(filter, callback) {
+	for (var i=0; i < localStorage.length; i++) {
+		var key = localStorage.key(i);
+		var value = getObject(key);
+		if (filter(value)) {
+			callback(value);
+		}
+	}
+}
+function forNodes(callback) {
+	forObjectsWithKey(function(key) {
+		return key.substring(0,1) == "h" 
+	}, callback);
+}
 
 
 
