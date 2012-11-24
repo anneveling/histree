@@ -118,8 +118,9 @@ function drawTree(container,tree) {
           onCreateLabel: function(label, node){
               label.id = node.id;
               var node_label = $("<div/>").addClass("node_label");
+              var node_wrapper =  $("<div/>").addClass("wrapper").appendTo(node_label);
 
-              var header = $("<div/>").addClass("header").appendTo(node_label);
+              var header = $("<div/>").addClass("header").appendTo(node_wrapper);
 
               var title = node.data.title;
               //recognize google query
@@ -137,24 +138,27 @@ function drawTree(container,tree) {
               header.append($("<a/>").attr("href",node.data.url).attr("title",title).text(title));
 
 
-              var body = $("<div/>").addClass("body").appendTo(header);
-              var img = $("<img/>").appendTo(body);
+              var body = $("<div/>").addClass("body").appendTo(node_wrapper);
+              var imgIcon = null;
               if (node.data.favIconUrl) {
-               img.addClass("favicon").attr("src", node.data.favIconUrl);
+                imgIcon = $("<img/>").appendTo(body);
+                imgIcon.addClass("favicon").attr("src", node.data.favIconUrl);
               }
 
               if (node.data.thumbnailUrl) {
-                  setTimeout(function () {
-                    img.removeClass("favicon").addClass("thumbnail").attr("src", node.data.thumbnailUrl);
-                    console.log("BLA");
-                  },200);
+                setTimeout(function () {
+                    var imgThumb = $("<img/>").appendTo(body);
+                    imgIcon.hide();
+                    imgThumb.addClass("thumbnail").attr("src", node.data.thumbnailUrl);
+                },200);
               }
 
 
               var details = $("<div/>").addClass("time").appendTo(body);
               details.text(showTime(node.data.timestamp));
 
-              label.innerHTML = node_label.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
+
+              $(label).append(node_label); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               
               var style = label.style;
               style.width = LABEL_WIDTH + 'px';

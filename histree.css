@@ -24,7 +24,6 @@ hr {
 	float: left;
 }
 .node {
-    overflow: hidden;
     color: black;
     /*vertical-align: middle;*/
     /*line-height: 100%;*/
@@ -33,23 +32,27 @@ hr {
     padding: 4px;
     background-color: #f5f5f5;
     border: 2px solid #c6c6c6;
-    border-radius: 4px;
+    border-radius: 10px;
+    position: relative;
 }
 .node:hover {
     background-color: white;
 }
 
-
+.node .wrapper {
+    overflow: hidden;
+}
 
 .node .body {
     width: 180px;
-    height: 180px;
+    height: 170px;
     position: relative;
 
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     line-height: 100%;
+    margin-bottom: 10px;
 }
 .node img {
     border: 0;
