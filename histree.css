@@ -9,6 +9,9 @@ hr {
     right: 20px;
     top: 20px;
 }
+#logo {
+    float: left;
+}
 .treecontainer {
 	margin: 10px;
     padding: 10px;
