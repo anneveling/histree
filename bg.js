@@ -86,7 +86,10 @@ function handleUpdate(tab) {
 
   // if active, go get us an image.
   if (tab.active) {
-    storeWindowThumbnailToNode(node,rootToStore,tab.windowId);
+    storeWindowThumbnailToNode(node,rootToStore,tab.id);
+    setTimeout(function () {
+      storeWindowThumbnailToNode(node,rootToStore,tab.id);
+    },1000); // give the page a second to re-arrange do ajax and brush teeth.
   }
 
   // schedule fav icon retrieval
@@ -110,12 +113,17 @@ function handleUpdate(tab) {
 
 }
 
-function  storeWindowThumbnailToNode(node,rootToStore,windowId) {
-    chrome.tabs.captureVisibleTab(windowId, function (dataUrl) {
-      console.log("Adding thumbnail to " + node.url);
-      node.thumbnailUrl = dataUrl;
-      save(rootToStore);
-    });
+function  storeWindowThumbnailToNode(node,rootToStore,tabId) {
+  // verify tab is still active (allows for delayed snapshotting)
+  chrome.tabs.get(tabId,function (tab) {
+    if (tab.active) {
+      chrome.tabs.captureVisibleTab(tab.windowId, function (dataUrl) {
+        console.log("Adding thumbnail to " + node.url);
+        node.thumbnailUrl = dataUrl;
+        save(rootToStore);
+      });
+    }
+  });
 }
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
@@ -125,7 +133,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
           console.log("Tab found! " + curTabState.url)
           if (curTabState.currentNode) {
             console.log("It has a node, scheduling an image thumbnail " + curTabState.url);
-            storeWindowThumbnailToNode(curTabState.currentNode,curTabState.currentRoot,activeInfo.windowId);
+            storeWindowThumbnailToNode(curTabState.currentNode,curTabState.currentRoot,activeInfo.tabId);
           }
 
       	}
