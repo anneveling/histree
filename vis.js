@@ -39,7 +39,7 @@ function drawTree(container,tree) {
           //set distance between node and its children
           constrained: false,
           levelsToShow: 50,
-          levelDistance: 50,
+          levelDistance: LABEL_STEP,
           offsetY: -(tree._dims.depth-1)*(LABEL_HEIGHT+LABEL_STEP)/2,
           Node: {
               height: LABEL_HEIGHT,
