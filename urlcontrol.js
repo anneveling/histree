@@ -2,7 +2,7 @@
 
 URL_BLACK_LIST = [
     new RegExp("^chrome://"),
-  new RegExp("^http.://www\\.google\\.[^/]+/url")
+  new RegExp("^http.?://www\\.google\\.[^/]+/url")
 ]
 
 function isUrlRelevantForHistree(url) {
