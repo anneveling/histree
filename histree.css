@@ -38,9 +38,12 @@ hr {
 .node .body {
     width: 128px;
     height: 128px;
-    border: 1px solid red;
     margin-left: auto;
     margin-right: auto;
+}
+.node .thumbnail {
+    max-width: 128px;
+    max-height: 128px;
 }
 
 .node a {

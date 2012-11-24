@@ -144,6 +144,9 @@ function drawTree(container,tree) {
               details.text(showTime(node.data.timestamp));
 
               var body = $("<div/>").addClass("body").appendTo(header);
+              if (node.data.thumbnailUrl) {
+              	$("<img/>").addClass("thumbnail").attr("src", node.data.thumbnailUrl).appendTo(body);
+              }
 
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               
@@ -162,7 +165,7 @@ function drawTree(container,tree) {
       });
 
   function normalizeForDisplay(i,node) {
-    node.data = { title: node.title , url: node.url , timestamp: node.timestamp , favIconUrl : node.favIconUrl };
+    node.data = { title: node.title , url: node.url , timestamp: node.timestamp , favIconUrl : node.favIconUrl, thumbnailUrl: node.thumbnailUrl};
     $.each(node.children,normalizeForDisplay)
   }
   normalizeForDisplay(0,tree);
