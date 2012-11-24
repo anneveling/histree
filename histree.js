@@ -15,6 +15,14 @@ function create(tag) {
   return $(document.createElement(tag))
 }
 
+function lastTimeStamp(node) {
+  var last = node.timestamp;
+  for (var i=0; i < node.children.length; i++) {
+    last = Math.max(last, lastTimestamp(node));
+  }
+  return last;
+}
+
 function buildNode(parent, node) {
 
   var details = create("div").addClass("details").attr("id","container_"+node.id);
@@ -47,8 +55,6 @@ function buildHistoryTree() {
     $.each(nodes, function (i, node) {
       console.log("adding div for root node: " + node.id);
       console.log(node);
-
-
 
       var c = create("div").addClass("treecontainer");
       var cid = "c_"+node.id;

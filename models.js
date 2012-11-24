@@ -34,6 +34,9 @@ function makeHistoryNodeFromTab(tab) {
   var node = HistoryNode(tab.url,tab.title);
   node.windowId = tab.windowId;
   node.tabId = tab.id;
+  if (tab.favIconUrl) {
+  	node.favIconUrl = tab.favIconUrl;
+  }
   return node;
 }
 
