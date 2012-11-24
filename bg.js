@@ -36,6 +36,7 @@ function handleUpdate(tab) {
 	}
 
 	console.log("handlingUpdate for tab: "+tab.id+" and url: "+tab.url);
+	//console.log(tab);
 
 
 	//we are here, so we will be handling this
@@ -82,6 +83,12 @@ function handleUpdate(tab) {
 			}
 		}	
 	}
+	//console.log("node favicon is now: "+node.favIconUrl);
+	//chrome.tabs.get(tab.id, function (ctab) {
+//		console.log("and now the favicon is: "+ctab.favIconUrl);
+//	});
+	//console.log("node is: ");
+	//console.log(node);
 
 	save(newRoot);
 
@@ -90,6 +97,19 @@ function handleUpdate(tab) {
 	tsAfter.currentNode = node;
 	putTabState(tsAfter); 
 
+	setTimeout(function() {
+		chrome.tabs.get(tab.id, function(t) {
+			if (t.favIconUrl) {
+				if (t.favIconUrl != tab.favIconUrl) {
+					//now updated
+					//chrome does this lazily...
+					node.favIconUrl = t.favIconUrl;
+					save(newRoot);
+				}
+			}
+			//console.log("favicon now is: "+ t.favIconUrl);
+		});
+	},200);
 
 }
 
