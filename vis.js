@@ -2,7 +2,7 @@
 
 function getSizeForTree(tree) {
 
-  var levelsWidth = []; // contains the total number of nodes on a level
+  var levelsWidth = [1]; // contains the total number of nodes on a level
 
   function widthCalculator(currentNode,currentLevel) {
     if (!currentNode.children || currentNode.children.length ==0 )
@@ -16,9 +16,9 @@ function getSizeForTree(tree) {
 
   }
 
-  widthCalculator(tree,0);
+  widthCalculator(tree,1);
 
-  return { height: levelsWidth.length * (50+200), width: Math.max.apply(this,levelsWidth) * 30 };
+  return { height: levelsWidth.length * (50+20), width: Math.max.apply(this,levelsWidth) * 200 };
 }
 
 function drawTree(container,tree) {
@@ -30,6 +30,7 @@ function drawTree(container,tree) {
           //set animation transition type
           transition: $jit.Trans.linear,
           //set distance between node and its children
+          levelsToShow : 4,
           levelDistance: 50,
           Node: {
               height: 20,

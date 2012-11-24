@@ -17,19 +17,27 @@ function create(tag) {
 
 function buildNode(parent, node) {
 
-  var details = create("div").addClass("details");
+  var details = create("div").addClass("details").attr("id","container_"+node.id);
+  var dims = getSizeForTree(node);
 
-  var title = node.title;
-  if (title == "") {
-    title = "(no title)";
-  }
-  if (title.length > 40) {
-    title = title.substr(0,40)+ "...";
-  }
-  create("a").text(title).attr("href",node.url).appendTo(details);
-
+  details.width(dims.width);
+  details.height(dims.height);
 
   parent.append(details);
+
+  drawTree(details,node);
+
+//  var title = node.title;
+//  if (title == "") {
+//    title = "(no title)";
+//  }
+//  if (title.length > 40) {
+//    title = title.substr(0,40)+ "...";
+//  }
+//  create("a").text(title).attr("href",node.url).appendTo(details);
+
+
+
 }
 
 function buildHistoryTree() {
@@ -40,14 +48,13 @@ function buildHistoryTree() {
       console.log("adding div for root node: " + node.id);
       console.log(node);
 
-      var w = 400;
-      var h = 800;
+
 
       var c = create("div").addClass("treecontainer");
       var cid = "c_"+node.id;
       c.attr("id", cid);
-      c.width(w);
-      c.height(h);
+      //c.width(dims.width);
+      //c.height(dims.height);
 
       $('#history').append(c);
 
