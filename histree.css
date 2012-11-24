@@ -43,6 +43,10 @@ hr {
     text-align: left;
     color: gray;
 }
+.node .query a {
+    color: black;
+    font-weight: bold;
+}
 
 .details {
 }

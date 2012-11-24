@@ -39,6 +39,14 @@ function showTime(timestamp) {
 
 	return result;
 }
+function findQueryParameter(url, name){
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
+    if (!results)
+    { 
+        return 0; 
+    }
+    return results[1] || 0;
+}
 
 function nodeBreadth(node) {
 	var b = 0;
@@ -70,7 +78,7 @@ function getSizeForTree(tree) {
   console.log("node depth: " + tree._dims.depth + " , breadth: "+tree._dims.breadth);
 
   return { height: tree._dims.depth * LABEL_HEIGHT + (tree._dims.depth - 1) * LABEL_STEP,
-           width:  (tree._dims.breadth * LABEL_WIDTH) + 50 }; // add 50 for safety measure
+           width:  (tree._dims.breadth * LABEL_WIDTH)  }; // add 50 for safety measure
 }
 
 function drawTree(container,tree) {
@@ -103,7 +111,6 @@ function drawTree(container,tree) {
           Edge: {
               type: 'bezier',
               lineWidth: 2,
-              col3or:'#23A4FF',
               color: '#c6c6c6',
               overridable: true
           },
@@ -117,7 +124,19 @@ function drawTree(container,tree) {
               if (node.data.favIconUrl) {
 	              header.append($("<img/>").attr("src",node.data.favIconUrl));
               }
-              header.append($("<a/>").attr("href",node.data.url).attr("title",node.data.title).text(node.data.title));
+
+              var title = node.data.title;
+              //recognize google query
+              var url = node.data.url;
+              if (url.indexOf("google.") != -1) {
+              	//see if there is a 'q' parameter
+              	var q = findQueryParameter(url, "q");
+              	if (q) {
+              		title = decodeURIComponent(q.replace(/\+/g, ' '));
+              		header.addClass("query");
+              	}
+              }
+              header.append($("<a/>").attr("href",node.data.url).attr("title",title).text(title));
 
               var details = $("<div/>").addClass("time").appendTo(header);
               details.text(showTime(node.data.timestamp));
