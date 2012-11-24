@@ -60,27 +60,48 @@ function buildHistoryTree() {
     for (var i=0; i < nodes.length; i++) {
       var node = nodes[i];
       node.lastTimeStamp = lastTimeStamp(node);
+      node.lastHour = Math.floor(node.lastTimeStamp / (60 * 1000));
     }
     nodes.sort(function(a,b) {
       return b.lastTimeStamp - a.lastTimeStamp;
     });
 
+    //group by hour
+    var thisHour = 0;
+    var thisHourDiv = null;
+    var thisRow = 0;
+
     $.each(nodes, function (i, node) {
       console.log("adding div for root node: " + node.id);
       console.log(node);
 
+      //is this a new hour?
+      if (node.lastHour != thisHour) {
+        //next
+        if (thisHourDiv) {
+          $("<div/>").addClass("clear").appendTo(thisHourDiv);
+        }
+        thisHourDiv = $("<div/>").addClass("hour").addClass("row"+thisRow).appendTo('#history');
+        var prettyHour = showTime(node.lastTimeStamp);
+        $("<div/>").addClass("hourlabel").text(prettyHour).appendTo(thisHourDiv);
+
+        thisHour = node.lastHour;
+        thisRow = (thisRow + 1) % 2;
+      }
+
       var c = create("div").addClass("treecontainer");
       var cid = "c_"+node.id;
       c.attr("id", cid);
-      //c.width(dims.width);
-      //c.height(dims.height);
-
-      $('#history').append(c);
+ 
+      thisHourDiv.append(c);
 
       buildNode(c, node);
 
  
     });
+    if (thisHourDiv) {
+          $("<div/>").addClass("clear").appendTo(thisHourDiv);
+    }
   });  
 }
 
