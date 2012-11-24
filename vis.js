@@ -143,6 +143,8 @@ function drawTree(container,tree) {
               var details = $("<div/>").addClass("time").appendTo(header);
               details.text(showTime(node.data.timestamp));
 
+              var body = $("<div/>").addClass("body").appendTo(header);
+
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               
               var style = label.style;

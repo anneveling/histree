@@ -35,6 +35,14 @@ hr {
     margin: 4px;
 }
 
+.node .body {
+    width: 128px;
+    height: 128px;
+    border: 1px solid red;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .node a {
 
 
