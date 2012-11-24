@@ -65,8 +65,13 @@ function drawTree(container,tree) {
           onCreateLabel: function(label, node){
               label.id = node.id;
               var v = $("<div/>");
-              v.text(node.data.title);
+              var favurl =node.data.favIconUrl;
+              if (!favurl) favurl = "q42.ico";
+              v.append($("<img/>").attr("src",favurl));
+              v.append($("<span/>").text(node.data.title));
               v.addClass("node_label");
+
+
 
 
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
@@ -86,7 +91,7 @@ function drawTree(container,tree) {
       });
 
   function normalizeForDisplay(i,node) {
-    node.data = { title: node.title , url: node.url , timestamp: node.timestamp };
+    node.data = { title: node.title , url: node.url , timestamp: node.timestamp , favIconUrl : node.favIconUrl };
     $.each(node.children,normalizeForDisplay)
   }
   normalizeForDisplay(0,tree);
