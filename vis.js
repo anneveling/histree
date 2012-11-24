@@ -1,5 +1,9 @@
 
 
+var LABEL_WIDTH = 200;
+var LABEL_HEIGHT = 40;
+var LABEL_STEP = 50;
+
 function getSizeForTree(tree) {
 
   var levelsWidth = [1]; // contains the total number of nodes on a level
@@ -18,7 +22,10 @@ function getSizeForTree(tree) {
 
   widthCalculator(tree,1);
 
-  return { height: levelsWidth.length * (50+20), width: Math.max.apply(this,levelsWidth) * 200 };
+  tree._dims = { depth: levelsWidth.length , breadth : Math.max.apply(this,levelsWidth)  };
+
+  return { height: tree._dims.depth * LABEL_HEIGHT + (tree._dims.depth-1)*LABEL_STEP,
+           width:  (tree._dims.breadth * LABEL_WIDTH) + 50 }; // add 50 for safty measure
 }
 
 function drawTree(container,tree) {
@@ -30,14 +37,18 @@ function drawTree(container,tree) {
           //set animation transition type
           transition: $jit.Trans.linear,
           //set distance between node and its children
-          levelsToShow : 4,
+          constrained: false,
+          levelsToShow: 50,
           levelDistance: 50,
+          offsetY: -(tree._dims.depth-1)*(LABEL_HEIGHT+LABEL_STEP)/2,
           Node: {
-              height: 20,
-              width: 200,
+              height: LABEL_HEIGHT,
+              width: LABEL_WIDTH,
               //node rendering function
               //type: 'nodeline',
               color:'inherit',
+              backgroundColor: null,
+              textDecoration: null,
               lineWidth: 2,
               align:"center",
               overridable: true
@@ -53,21 +64,33 @@ function drawTree(container,tree) {
 
           onCreateLabel: function(label, node){
               label.id = node.id;
-              label.innerHTML = node.id; // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
+              var v = $("<div/>");
+              v.text(node.data.title);
+              v.addClass("node_label");
+
+
+              label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               var style = label.style;
-              style.width = 200 + 'px';
-              style.height = 17 + 'px';
+              style.width = LABEL_WIDTH + 'px';
+              style.height = (LABEL_HEIGHT -3) + 'px';
               style.cursor = 'pointer';
               style.color = '#000';
-              style.backgroundColor = '#fff';
-              style.fontSize = '0.8em';
-              style.textAlign= 'center';
-              style.textDecoration = 'underline';
-              style.paddingTop = '3px';
+              //style.backgroundColor = '#fff';
+              //style.fontSize = '0.8em';
+              //style.textAlign= 'center';
+              //style.textDecoration = 'underline';
+              //style.paddingTop = '3px';
           }
 
 
       });
+
+  function normalizeForDisplay(i,node) {
+    node.data = { title: node.title , url: node.url , timestamp: node.timestamp };
+    $.each(node.children,normalizeForDisplay)
+  }
+  normalizeForDisplay(0,tree);
+
   st.loadJSON(tree);
   st.compute();
   st.select(st.root);

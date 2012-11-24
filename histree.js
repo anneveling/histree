@@ -20,6 +20,9 @@ function buildNode(parent, node) {
   var details = create("div").addClass("details").attr("id","container_"+node.id);
   var dims = getSizeForTree(node);
 
+  console.log("Size for tree with id "+node.id+": "+JSON.stringify(dims));
+
+ // details.width(dims.width < 200 ? dims.width: 1000);
   details.width(dims.width);
   details.height(dims.height);
 
