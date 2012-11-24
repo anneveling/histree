@@ -4,6 +4,42 @@ var LABEL_WIDTH = 200;
 var LABEL_HEIGHT = 40;
 var LABEL_STEP = 50;
 
+//helpers
+
+var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function padNumber(n, len) {
+	var result = "" + n;
+	while (result.length < len) {
+		result = "0" + result;
+	}
+	return result;
+}
+function showTime(timestamp) {
+	var now = new Date();
+
+	var d = new Date(timestamp);
+
+	var result = "";
+
+	//add date parte
+	if ((d.getFullYear() == now.getFullYear()) && (d.getMonth() == now.getMonth()) && (d.getDate() == now.getDate()) ) {
+		//today
+	} else {
+		result += dayOfWeek[d.getDay()] + " " + months[d.getMonth()]+ " " + d.getDate();
+		if (d.getFullYear() != now.getFullYear()) {
+			result += ", "+d.getFullYear();
+		}
+	}
+
+	//add time part
+	if (result != "") result += " ";
+	result += padNumber(d.getHours(),2)+":"+padNumber(d.getMinutes(),2);
+
+	return result;
+}
+
 function getSizeForTree(tree) {
 
   var levelsWidth = [1]; // contains the total number of nodes on a level
@@ -58,19 +94,24 @@ function drawTree(container,tree) {
           Edge: {
               type: 'bezier',
               lineWidth: 2,
-              color:'#23A4FF',
+              col3or:'#23A4FF',
+              color: '#c6c6c6',
               overridable: true
           },
 
           onCreateLabel: function(label, node){
               label.id = node.id;
-              var v = $("<div/>");
-              var favurl =node.data.favIconUrl;
-              if (!favurl) favurl = "q42.ico";
-              v.append($("<img/>").attr("src",favurl));
-              v.append($("<span/>").text(node.data.title));
-              v.addClass("node_label");
+              var v = $("<div/>").addClass("node_label");
 
+              var header = $("<div/>").addClass("header").appendTo(v);
+
+              if (node.data.favIconUrl) {
+	              header.append($("<img/>").attr("src",node.data.favIconUrl));
+              }
+              header.append($("<a/>").attr("href",node.data.url).attr("title",node.data.title).text(node.data.title));
+
+              var details = $("<div/>").addClass("time").appendTo(header);
+              details.text(showTime(node.data.timestamp));
 
 
 
