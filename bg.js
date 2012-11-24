@@ -99,17 +99,20 @@ function handleUpdate(tab) {
 
 	setTimeout(function() {
 		chrome.tabs.get(tab.id, function(t) {
-			if (t.favIconUrl) {
-				if (t.favIconUrl != tab.favIconUrl) {
-					//now updated
-					//chrome does this lazily...
-					node.favIconUrl = t.favIconUrl;
-					save(newRoot);
+			//if no change since
+			if (t.url == tab.url) {
+				if (t.favIconUrl) {
+					if (t.favIconUrl != tab.favIconUrl) {
+						//now updated
+						//chrome does this lazily...
+						node.favIconUrl = t.favIconUrl;
+						save(newRoot);
+					}
 				}
+				//console.log("favicon now is: "+ t.favIconUrl);
 			}
-			//console.log("favicon now is: "+ t.favIconUrl);
 		});
-	},200);
+	},500);
 
 }
 
