@@ -39,17 +39,6 @@ function buildNode(parent, node) {
 
   drawTree(details,node);
 
-//  var title = node.title;
-//  if (title == "") {
-//    title = "(no title)";
-//  }
-//  if (title.length > 40) {
-//    title = title.substr(0,40)+ "...";
-//  }
-//  create("a").text(title).attr("href",node.url).appendTo(details);
-
-
-
 }
 
 function buildHistoryTree() {
@@ -83,7 +72,7 @@ function buildHistoryTree() {
           $("<div/>").addClass("clear").appendTo(thisHourDiv);
         }
         thisHourDiv = $("<div/>").addClass("hour").addClass("row"+thisRow).appendTo('#history');
-        var prettyHour = showTime(node.lastTimeStamp);
+        var prettyHour = showTime(node.lastHour * 60 * 60 * 1000);
         $("<div/>").append($("<span/>").addClass("hourlabel").text(prettyHour)).appendTo(thisHourDiv);
 
         thisHour = node.lastHour;
