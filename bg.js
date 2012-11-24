@@ -32,7 +32,7 @@ function handleUpdate(tab) {
 	var curTabState = findTabState(tab.windowId, tab.id);
 	if (curTabState) {
 		if (curTabState.url == tab.url) {
-			console.log("sorry, but this event was already handled. ignoring");
+			console.log("sorry, but this event was already handled. ignoring :" + tab.url);
 			return;
 		}
     curTabState.url = tab.url;
@@ -43,7 +43,7 @@ function handleUpdate(tab) {
     putTabState(curTabState); // save as quickly as possible so block duplicate events.
     // do we need to link with root of original tab?
     if (isNewEmptyTabUrl(tab.url)) {
-        console.log("New tab detected. Breaking cluster.")
+        console.log("New tab detected. Breaking cluster: " + tab.url);
         return;
     }
 
@@ -82,8 +82,14 @@ function handleUpdate(tab) {
   putTabState(curTabState);
   save(curTabState.currentRoot);
 
-  // schedule fav icon retrieval
   var rootToStore = curTabState.currentRoot; // capture root to avoid multi-threading bugs.
+
+  // if active, go get us an image.
+  if (tab.active) {
+    storeWindowThumbnailToNode(node,rootToStore,tab.windowId);
+  }
+
+  // schedule fav icon retrieval
   setTimeout(function() {
  		chrome.tabs.get(tab.id, function(t) {
  			//if no change since
@@ -94,10 +100,9 @@ function handleUpdate(tab) {
  						//chrome does this lazily...
  						node.favIconUrl = t.favIconUrl;
  						save(rootToStore);
-             console.log("Saved favicon for : " + node.url);
+            // console.log("Saved favicon for : " + node.url);
  					}
  				}
- 				//console.log("favicon now is: "+ t.favIconUrl);
  			}
  		});
  	},500);
@@ -105,20 +110,36 @@ function handleUpdate(tab) {
 
 }
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.tabs.create({'url': chrome.extension.getURL('histree.html')}, function(tab) {
-    // Tab opened.
-  });
+function  storeWindowThumbnailToNode(node,rootToStore,windowId) {
+    chrome.tabs.captureVisibleTab(windowId, function (dataUrl) {
+      console.log("Adding thumbnail to " + node.url);
+      node.thumbnailUrl = dataUrl;
+      save(rootToStore);
+    });
+}
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+      console.log("Tab activate! " + activeInfo.tabId);
+      var curTabState = findTabState(activeInfo.windowId, activeInfo.tabId);
+      	if (curTabState) {
+          console.log("Tab found! " + curTabState.url)
+          if (curTabState.currentNode) {
+            console.log("It has a node, scheduling an image thumbnail " + curTabState.url);
+            storeWindowThumbnailToNode(curTabState.currentNode,curTabState.currentRoot,activeInfo.windowId);
+          }
+
+      	}
 });
 
+
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	//console.log("tab.onUpdated for tab-id: " + tabId);
-	//console.log(changeInfo);
-	//console.log(tab);
+//	console.log("tab.onUpdated for tab-id: " + tabId);
+//	console.log(changeInfo);
+//	console.log(tab);
 
 	if (changeInfo.status == "complete") {
-		//console.log("tab.onUpdated COMPLETE");
-
+//		console.log("tab.onUpdated COMPLETE");
+//    console.log(tab);
 		handleUpdate(tab);
 	}
 		
