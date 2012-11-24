@@ -55,18 +55,17 @@ hr {
 }
 .hour {
     border-top: 2px solid #c6c6c6;
-    margin-bottom: 20px;
-    position: relative;
 }
 .row0 {
-    background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #CCCCCC 100%);
+    background-color: #f5f5f5;
 
 }
 .row1 {
-    background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #CCCCCC 100%);
+    background-color: white;
 
 }
 .hourlabel {
-    position: absolute;
-    left: -40px;
+    border: 2px solid #c6c6c6;
+    background-color: white;
+    padding: 2px;
 }

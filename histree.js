@@ -83,7 +83,7 @@ function buildHistoryTree() {
         }
         thisHourDiv = $("<div/>").addClass("hour").addClass("row"+thisRow).appendTo('#history');
         var prettyHour = showTime(node.lastTimeStamp);
-        $("<div/>").addClass("hourlabel").text(prettyHour).appendTo(thisHourDiv);
+        $("<div/>").append($("<span/>").addClass("hourlabel").text(prettyHour)).appendTo(thisHourDiv);
 
         thisHour = node.lastHour;
         thisRow = (thisRow + 1) % 2;
