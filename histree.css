@@ -4,13 +4,12 @@ hr {
 
 .treecontainer {
 	margin: 10px;
-	background-color: silver;
-	border: 1px solid red;
+	border: 1px solid silver;
+	border-radius: 10px;
 	float: left;
 }
 .node {
-	border: 1px solid green;
-	margin: 10px;
+	
 }
 .details {
 
