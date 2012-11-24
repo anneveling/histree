@@ -1,6 +1,12 @@
 hr {
 	clear: both;
 }
+
+.page-header {
+    padding-left: 48px;
+    background: url(icon48.png) no-repeat left top;
+}
+
 .header {
     position: relative;
 }
@@ -19,6 +25,7 @@ hr {
 }
 .node {
     overflow: hidden;
+    color: black;
     /*vertical-align: middle;*/
     /*line-height: 100%;*/
     text-align: center;
@@ -37,19 +44,28 @@ hr {
 .node .body {
     width: 180px;
     height: 180px;
+    position: relative;
 
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     line-height: 100%;
 }
+.node img {
+    border: 0;
+    padding: 0;
+    margin: auto;
+    top: 0; bottom: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
 .node .thumbnail {
     max-width: 180px;
     max-height: 180px;
-    border: 0;
 }
 .node .favicon {
-    max-width: 32px; max-height: 32px; border: 0;
+    max-width: 180px; max-height: 180px; border: 0;
 }
 
 .node a {
@@ -59,6 +75,9 @@ hr {
 .node .time {
     text-align: left;
     color: gray;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 .node .query a {
     color: black;

@@ -117,9 +117,9 @@ function drawTree(container,tree) {
 
           onCreateLabel: function(label, node){
               label.id = node.id;
-              var v = $("<div/>").addClass("node_label");
+              var node_label = $("<div/>").addClass("node_label");
 
-              var header = $("<div/>").addClass("header").appendTo(v);
+              var header = $("<div/>").addClass("header").appendTo(node_label);
 
               var title = node.data.title;
               //recognize google query
@@ -136,24 +136,29 @@ function drawTree(container,tree) {
               }
               header.append($("<a/>").attr("href",node.data.url).attr("title",title).text(title));
 
-              var details = $("<div/>").addClass("time").appendTo(header);
-              details.text(showTime(node.data.timestamp));
 
               var body = $("<div/>").addClass("body").appendTo(header);
-              if (node.data.thumbnailUrl) {
-              	$("<img/>").addClass("thumbnail").attr("src", node.data.thumbnailUrl).appendTo(body);
-              } else {
-              	if (node.data.favIconUrl) {
-              		$("<img/>").addClass("favicon").attr("src", node.data.favIconUrl).appendTo(body);	
-				}
+              var img = $("<img/>").appendTo(body);
+              if (node.data.favIconUrl) {
+               img.addClass("favicon").attr("src", node.data.favIconUrl);
               }
 
-              label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
+              if (node.data.thumbnailUrl) {
+                  setTimeout(function () {
+                    img.removeClass("favicon").addClass("thumbnail").attr("src", node.data.thumbnailUrl);
+                    console.log("BLA");
+                  },200);
+              }
+
+
+              var details = $("<div/>").addClass("time").appendTo(body);
+              details.text(showTime(node.data.timestamp));
+
+              label.innerHTML = node_label.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
               
               var style = label.style;
               style.width = LABEL_WIDTH + 'px';
               style.height = (LABEL_HEIGHT -3) + 'px';
-              style.color = '#000';
               //style.backgroundColor = '#fff';
               //style.fontSize = '0.8em';
               //style.textAlign= 'center';
