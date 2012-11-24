@@ -9,6 +9,7 @@ function showStorageContent() {
 function clearStorage() {
   clear();
   showStorageContent();
+  buildHistoryTree();
 }
 
 function create(tag) {
