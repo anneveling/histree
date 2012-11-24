@@ -121,10 +121,6 @@ function drawTree(container,tree) {
 
               var header = $("<div/>").addClass("header").appendTo(v);
 
-              if (node.data.favIconUrl) {
-	              header.append($("<img/>").attr("src",node.data.favIconUrl));
-              }
-
               var title = node.data.title;
               //recognize google query
               var url = node.data.url;
@@ -146,6 +142,10 @@ function drawTree(container,tree) {
               var body = $("<div/>").addClass("body").appendTo(header);
               if (node.data.thumbnailUrl) {
               	$("<img/>").addClass("thumbnail").attr("src", node.data.thumbnailUrl).appendTo(body);
+              } else {
+              	if (node.data.favIconUrl) {
+              		$("<img/>").addClass("favicon").attr("src", node.data.favIconUrl).appendTo(body);	
+				}
               }
 
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';

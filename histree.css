@@ -29,21 +29,24 @@ hr {
     background-color: white;
 }
 
-.node img {
-    max-width: 32px; max-height: 32px; border: 0;
-    float: left;
-    margin: 4px;
-}
+
 
 .node .body {
-    width: 128px;
-    height: 128px;
+    width: 180px;
+    height: 180px;
+
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+    line-height: 100%;
 }
 .node .thumbnail {
-    max-width: 128px;
-    max-height: 128px;
+    max-width: 180px;
+    max-height: 180px;
+    border: 0;
+}
+.node .favicon {
+    max-width: 32px; max-height: 32px; border: 0;
 }
 
 .node a {
