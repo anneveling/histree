@@ -40,28 +40,37 @@ function showTime(timestamp) {
 	return result;
 }
 
+function nodeBreadth(node) {
+	var b = 0;
+
+	for (var i=0; i < node.children.length; i++) {
+		var child = node.children[i];
+		b += nodeBreadth(child);
+	}
+	if (b == 0) b = 1;
+	return b;
+}
+function nodeDepth(node) {
+	var d = 0;
+
+	for (var i=0; i < node.children.length; i++) {
+		var child = node.children[i];
+		d = Math.max(d, nodeDepth(child));
+	}
+
+	return 1 + d;
+}
+
 function getSizeForTree(tree) {
+  tree._dims = {
+  	depth: nodeDepth(tree),
+  	breadth: nodeBreadth(tree)
+  };
 
-  var levelsWidth = [1]; // contains the total number of nodes on a level
+  console.log("node depth: " + tree._dims.depth + " , breadth: "+tree._dims.breadth);
 
-  function widthCalculator(currentNode,currentLevel) {
-    if (!currentNode.children || currentNode.children.length ==0 )
-      return;
-
-    if ( currentLevel >= levelsWidth.length ) levelsWidth.push(0); // add one, we need it.
-    levelsWidth[currentLevel] += currentNode.children.length;
-    $.each(currentNode.children,function (i,c) {
-          widthCalculator(c,currentLevel+1);
-        });
-
-  }
-
-  widthCalculator(tree,1);
-
-  tree._dims = { depth: levelsWidth.length , breadth : Math.max.apply(this,levelsWidth)  };
-
-  return { height: tree._dims.depth * LABEL_HEIGHT + (tree._dims.depth-1)*LABEL_STEP,
-           width:  (tree._dims.breadth * LABEL_WIDTH) + 50 }; // add 50 for safty measure
+  return { height: tree._dims.depth * LABEL_HEIGHT + (tree._dims.depth - 1) * LABEL_STEP,
+           width:  (tree._dims.breadth * LABEL_WIDTH) + 50 }; // add 50 for safety measure
 }
 
 function drawTree(container,tree) {
@@ -116,10 +125,10 @@ function drawTree(container,tree) {
 
 
               label.innerHTML = v.html(); // '<a target="_blank" href="http://google.com?q='+node.name+'">'+node.name+'</a>';
+              
               var style = label.style;
               style.width = LABEL_WIDTH + 'px';
               style.height = (LABEL_HEIGHT -3) + 'px';
-              style.cursor = 'pointer';
               style.color = '#000';
               //style.backgroundColor = '#fff';
               //style.fontSize = '0.8em';
