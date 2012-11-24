@@ -78,7 +78,7 @@ function getSizeForTree(tree) {
   console.log("node depth: " + tree._dims.depth + " , breadth: "+tree._dims.breadth);
 
   return { height: tree._dims.depth * LABEL_HEIGHT + (tree._dims.depth - 1) * LABEL_STEP,
-           width:  (tree._dims.breadth * LABEL_WIDTH)  }; // add 50 for safety measure
+           width:  (tree._dims.breadth * LABEL_WIDTH) + 50  }; // add 50 for safety measure
 }
 
 function drawTree(container,tree) {
