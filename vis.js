@@ -48,22 +48,24 @@ function findQueryParameter(url, name){
     return results[1] || 0;
 }
 
-function nodeBreadth(node) {
+function nodeBreadth(node, thisLevel) {
 	var b = 0;
+	if (thisLevel > 100) return b;
 
 	for (var i=0; i < node.children.length; i++) {
 		var child = node.children[i];
-		b += nodeBreadth(child);
+		b += nodeBreadth(child, thisLevel + 1);
 	}
 	if (b == 0) b = 1;
 	return b;
 }
-function nodeDepth(node) {
+function nodeDepth(node, thisLevel) {
 	var d = 0;
+	if (thisLevel > 100) return d;
 
 	for (var i=0; i < node.children.length; i++) {
 		var child = node.children[i];
-		d = Math.max(d, nodeDepth(child));
+		d = Math.max(d, nodeDepth(child, thisLevel + 1));
 	}
 
 	return 1 + d;
@@ -71,8 +73,8 @@ function nodeDepth(node) {
 
 function getSizeForTree(tree) {
   tree._dims = {
-  	depth: nodeDepth(tree),
-  	breadth: nodeBreadth(tree)
+  	depth: nodeDepth(tree, 1),
+  	breadth: nodeBreadth(tree, 1)
   };
 
   console.log("node depth: " + tree._dims.depth + " , breadth: "+tree._dims.breadth);
@@ -118,9 +120,16 @@ function drawTree(container,tree) {
           onCreateLabel: function(label, node){
               label.id = node.id;
               var node_label = $("<div/>").addClass("node_label");
-              var node_wrapper =  $("<div/>").addClass("wrapper").appendTo(node_label);
 
-              var header = $("<div/>").addClass("header").appendTo(node_wrapper);
+              var node_tab_outer = $("<div/>").addClass("node_tab").appendTo(node_label);
+              var node_tab = $("<div/>").addClass("wrapper").appendTo(node_tab_outer);
+               
+
+              var node_content = $("<div/>").addClass("node_content").appendTo(node_label);
+
+              var node_wrapper =  $("<div/>").addClass("wrapper").appendTo(node_content);
+
+              //var header = $("<div/>").addClass("header").appendTo(node_wrapper);
 
               var title = node.data.title;
               //recognize google query
@@ -131,11 +140,11 @@ function drawTree(container,tree) {
               	var q = findQueryParameter(url, "q");
               	if (q) {
               		title = decodeURIComponent(q.replace(/\+/g, ' '));
-              		header.addClass("query");
+              		node_label.addClass("query");
               		isSpecial = true;
               	}
               }
-              header.append($("<a/>").attr("href",node.data.url).attr("title",title).text(title));
+              $("<a/>").attr("href",node.data.url).attr("title",title).text(title).appendTo(node_tab);
 
 
               var body = $("<div/>").addClass("body").appendTo(node_wrapper);

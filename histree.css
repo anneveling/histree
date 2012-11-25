@@ -29,23 +29,57 @@ hr {
     /*line-height: 100%;*/
     text-align: center;
     white-space: nowrap;
-    padding: 4px;
-    background-color: #f5f5f5;
-    border: 2px solid #c6c6c6;
-    border-radius: 10px;
     position: relative;
 }
 .node:hover {
-    background-color: white;
 }
 
 .node .wrapper {
     overflow: hidden;
 }
-
+.node .node_tabs {
+}
+.node .node_tab {
+    position: absolute;
+    height: 24px;
+    top: 0px;
+    left: 8px;
+    display: inline-block;
+    max-width: 160px;
+    min-width: 100px;
+    overflow: hidden;
+    border: 2px solid #c6c6c6;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: none;
+    background-color: white;
+    text-align: left;
+    z-index: 42;
+    padding: 0 6px 0 6px;
+}
+.node .node_tabs a {
+    margin-right: 4px;
+    overflow: hidden;
+}
+.node .node_content {
+    position: absolute;
+    top: 24px;
+    bottom: -4px;
+    width: 196px;
+    border: 2px solid #c6c6c6;
+    border-radius: 8px;
+    background-color: white;
+    z-index: 1;
+}
+.node:hover .node_content {
+    border-color: #666666;
+}
+.node:hover .node_tab {
+    border-color: #666666;
+}
 .node .body {
-    width: 180px;
-    height: 170px;
+    width: 196px;
+    height: 160px;
     position: relative;
 
     margin-left: auto;
@@ -80,7 +114,7 @@ hr {
     color: gray;
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 4px;
 }
 .node .query a {
     color: black;
@@ -96,11 +130,11 @@ hr {
     border-top: 2px solid #c6c6c6;
 }
 .row0 {
-    background-color: #f5f5f5;
+    background-color: whitesmoke;
 
 }
 .row1 {
-    background-color: white;
+    background-color: ghostwhite;
 
 }
 .hourlabel {

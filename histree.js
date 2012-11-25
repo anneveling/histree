@@ -16,10 +16,11 @@ function create(tag) {
   return $(document.createElement(tag))
 }
 
-function lastTimeStamp(node) {
+function lastTimeStamp(node, thisLevel) {
   var last = node.timestamp;
+  if (thisLevel > 100) return last;
   for (var i=0; i < node.children.length; i++) {
-    last = Math.max(last, lastTimeStamp(node.children[i]));
+    last = Math.max(last, lastTimeStamp(node.children[i], thisLevel + 1));
   }
   return last;
 }
@@ -49,7 +50,7 @@ function buildHistoryTree() {
     //store lastTimeStamp on each node for sorting
     for (var i=0; i < nodes.length; i++) {
       var node = nodes[i];
-      node.lastTimeStamp = lastTimeStamp(node);
+      node.lastTimeStamp = lastTimeStamp(node, 1);
       node.lastHour = Math.floor(node.lastTimeStamp / (60 * 60 * 1000));
     }
     nodes.sort(function(a,b) {
