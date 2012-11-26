@@ -16,15 +16,6 @@ function create(tag) {
   return $(document.createElement(tag))
 }
 
-function lastTimeStamp(node, thisLevel) {
-  var last = node.timestamp;
-  if (thisLevel > 100) return last;
-  for (var i=0; i < node.children.length; i++) {
-    last = Math.max(last, lastTimeStamp(node.children[i], thisLevel + 1));
-  }
-  return last;
-}
-
 function buildNode(parent, node) {
 
   var details = create("div").addClass("details").attr("id","container_"+node.id);
@@ -42,6 +33,10 @@ function buildNode(parent, node) {
 
 }
 
+function extractHour(t) {
+  return Math.ceil(t / (60 * 60 * 1000));
+}
+
 function buildHistoryTree() {
   $('#history').html('');
 
@@ -56,16 +51,17 @@ function buildHistoryTree() {
       console.log(node);
 
       //is this a new hour?
-      if (node.lastHour != thisHour) {
+      var nodeHour = extractHour(node.timestamp);
+      if (nodeHour != thisHour) {
         //next
         if (thisHourDiv) {
           $("<div/>").addClass("clear").appendTo(thisHourDiv);
         }
         thisHourDiv = $("<div/>").addClass("hour").addClass("row"+thisRow).appendTo('#history');
-        var prettyHour = showTime(node.lastHour * 60 * 60 * 1000);
+        var prettyHour = showTime(nodeHour * 60 * 60 * 1000);
         $("<div/>").append($("<span/>").addClass("hourlabel").text(prettyHour)).appendTo(thisHourDiv);
 
-        thisHour = node.lastHour;
+        thisHour = nodeHour;
         thisRow = (thisRow + 1) % 2;
       }
 
@@ -80,6 +76,11 @@ function buildHistoryTree() {
     //mark that we want more
     return true;
   });
+
+  //finish this hour div
+  if (thisHourDiv) {
+    $("<div/>").addClass("clear").appendTo(thisHourDiv);
+  }
 
   /*getAllRootNodes(function(nodes) {
     //sort by lastTimeStamp

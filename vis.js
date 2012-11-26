@@ -157,7 +157,7 @@ function drawTree(container,tree) {
               if (node.data.thumbnailUrl) {
                 setTimeout(function () {
                     var imgThumb = $("<img/>").appendTo(body);
-                    imgIcon.hide();
+                    if (imgIcon) imgIcon.hide();
                     imgThumb.addClass("thumb").attr("src", node.data.thumbnailUrl);
                 },200);
               }
