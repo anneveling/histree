@@ -23,6 +23,28 @@ function addChild(parent, child) {
 	parent.children.push(child);
 }
 
+function findChildPath(parent, child, thisLevel) {
+  //returns an array of the path from parent to child, or an empty list if cannot be found
+
+  if (thisLevel > 100) return [];
+
+  if (parent === child) return [child];
+  if (parent.children.length == 0) return [];
+  for (var i=0; i < parent.children.length; i++) {
+    var c = parent.children[i];
+    var cpath = findChildPath(c, child, thisLevel + 1);
+    if (cpath.length == 0) {
+      //no, not here
+      //continue searching
+    } else {
+      //yes! it was found in this child
+      return [parent].concat(cpath);
+    }
+  }
+  //if we get here, then we could not find it
+  return [];
+}
+
 function handleUpdate(tab) {
 
 	//see if another event has already handled this event
@@ -37,8 +59,7 @@ function handleUpdate(tab) {
 		}
     curTabState.url = tab.url;
     putTabState(curTabState); // store asap to avoid duplicates.
-	}
-  else {
+	} else {
     curTabState =TabState(tab);
     putTabState(curTabState); // save as quickly as possible so block duplicate events.
     // do we need to link with root of original tab?
@@ -69,11 +90,25 @@ function handleUpdate(tab) {
   var node = makeHistoryNodeFromTab(tab);
 
   if (curTabState.currentNode) {
-    console.log("Adding as child.");
-    addChild(curTabState.currentNode,node);
-    curTabState.currentNode = node;
-  }
-  else {
+    //maybe this url is actually a parent of that node and we are going back
+    //find the currentNode in the tree, and keep track of the parents
+    var cpath = findChildPath(curTabState.currentRoot, curTabState.currentNode, 1);
+    var foundparent = null;
+    for (var i = cpath.length - 1; i >= 0; i--) {
+      if (cpath[i].url == node.url) {
+        foundparent = cpath[i];
+      }
+    }
+    if (foundparent) {
+      console.log("Found that url in this node's history, moving back up the tree");
+      addChild(foundparent, node);
+      curTabState.currentNode = node;
+    } else {
+      console.log("Adding as child.");
+      addChild(curTabState.currentNode,node);
+      curTabState.currentNode = node;
+    }
+  } else {
     console.log("Starting a new root");
     curTabState.currentNode = node;
     curTabState.currentRoot = node;

@@ -129,9 +129,10 @@ function drawTree(container,tree) {
 
               var node_wrapper =  $("<div/>").addClass("wrapper").appendTo(node_content);
 
-              //var header = $("<div/>").addClass("header").appendTo(node_wrapper);
+              var body = $("<div/>").addClass("body").appendTo(node_wrapper);
 
               var title = node.data.title;
+
               //recognize google query
               var url = node.data.url;
               var isSpecial = false;
@@ -142,12 +143,13 @@ function drawTree(container,tree) {
               		title = decodeURIComponent(q.replace(/\+/g, ' '));
               		node_label.addClass("query");
               		isSpecial = true;
+                  
+                  $("<span/>").addClass("input-block-level").addClass("uneditable-input").addClass("google-query").text(title).appendTo(body);
               	}
               }
               $("<a/>").attr("href",node.data.url).attr("title",title).text(title).appendTo(node_tab);
 
 
-              var body = $("<div/>").addClass("body").appendTo(node_wrapper);
               var imgIcon = null;
               if (node.data.favIconUrl) {
                 imgIcon = $("<img/>").appendTo(body);
