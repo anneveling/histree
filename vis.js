@@ -149,23 +149,24 @@ function drawTree(container,tree) {
               }
               $("<a/>").attr("href",node.data.url).attr("title",title).text(title).appendTo(node_tab);
 
+              var imgContainer = $("<div/>").addClass(isSpecial ? "img-container-small" : "img-container").appendTo(body);
 
               var imgIcon = null;
               if (node.data.favIconUrl) {
-                imgIcon = $("<img/>").appendTo(body);
+                imgIcon = $("<img/>").appendTo(imgContainer);
                 imgIcon.addClass("favicon").attr("src", node.data.favIconUrl);
               }
 
               if (node.data.thumbnailUrl) {
                 setTimeout(function () {
-                    var imgThumb = $("<img/>").appendTo(body);
+                    var imgThumb = $("<img/>").appendTo(imgContainer);
                     if (imgIcon) imgIcon.hide();
                     imgThumb.addClass("thumb").attr("src", node.data.thumbnailUrl);
                 },200);
               }
 
 
-              var details = $("<div/>").addClass("time").appendTo(body);
+              var details = $("<div/>").addClass("time").appendTo(node_content);
               details.text(showTime(node.data.timestamp));
 
 

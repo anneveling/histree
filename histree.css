@@ -3,8 +3,9 @@ hr {
 }
 
 .page-header {
-    padding-left: 48px;
-    background: url(icon48.png) no-repeat left top;
+    padding-left: 128px;
+    height: 128px;
+    background: url(treerings128.png) no-repeat left top;
 }
 
 .header {
@@ -67,22 +68,32 @@ hr {
     background-color: white;
     z-index: 1;
 }
-.node:hover .node_content {
-    border-color: #a0a0a0;
-}
-.node:hover .node_tab {
-    border-color: #a0a0a0;
-}
+
 .node .body {
     width: 180px;
     height: 160px;
     position: relative;
+    
 
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     line-height: 100%;
     padding-top: 8px;
+}
+.node .img-container {
+    padding: 0;
+    top: 0px; bottom: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.node .img-container-small {
+    padding: 0;
+    top: 40px; bottom: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 .node img {
     border: 0;
@@ -93,12 +104,16 @@ hr {
     left: 0;
     right: 0;
 }
-.node .thumb {
+.node .img-container .thumb {
     max-width: 180px;
-    max-height: 180px;
+    max-height: 160px;
+}
+.node .img-container .thumb {
+    max-width: 180px;
+    max-height: 120px;
 }
 .node .favicon {
-    max-width: 180px; max-height: 180px; border: 0;
+    max-width: 32px; max-height: 32px; border: 0;
 }
 
 .node a {
@@ -109,12 +124,15 @@ hr {
     text-align: right;
     color: gray;
     position: absolute;
-    bottom: 0;
-    right: 0px;
+    bottom: -2px;
+    right: -2px;
+    border: 2px solid #c6c6c6;
+    border-top-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 2px;
+    background-color: white;
 }
-.node .query a {
 
-}
 .google-query {
     text-align: left;
     width: 100%;

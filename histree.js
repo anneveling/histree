@@ -39,6 +39,7 @@ function buildHistoryTree(startTimestamp) {
   var thisRow = 0;
 
   var nodesShown = 0;
+  var timestampOfFirstNode = 0;
 
   var section = $("<div/>").addClass("hour-section").appendTo("#history");
 
@@ -47,6 +48,7 @@ function buildHistoryTree(startTimestamp) {
       console.log(node);
 
       nodesShown++;
+      if (!timestampOfFirstNode) timestampOfFirstNode = node.timestamp;
 
       //is this a new hour?
       var nodeHour = extractHour(node.timestamp);
@@ -78,7 +80,8 @@ function buildHistoryTree(startTimestamp) {
       buildNode(c, node);
 
     //mark that we want more
-    if (nodesShown >= 5) {
+    //show only last 42 trees, and no more than one day at a time
+    if ((nodesShown >= 42) || ((timestampOfFirstNode) && (node.timestamp < timestampOfFirstNode - 24 * 60 * 60 * 1000))) {
       //$("<div/>").addClass("hour-end").appendTo(section);
       var p = $("<p/>").appendTo("#history");
       $("<button/>").attr("id","more_"+node.id).addClass("btn").addClass("btn-info").text("more...").appendTo(p);

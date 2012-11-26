@@ -3,9 +3,9 @@
   "version": "1.5",
   "manifest_version": 2,
   "icons": {
-  	"16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon.png" },
+  	"16": "treerings16.png",
+    "48": "treerings48.png",
+    "128": "treerings128.png" },
   "description": "Histree",
   "background": {
     "scripts": ["models.js","storage.js","urlcontrol.js","bg.js"],
