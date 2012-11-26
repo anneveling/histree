@@ -93,16 +93,21 @@ function handleUpdate(tab) {
     //maybe this url is actually a parent of that node and we are going back
     //find the currentNode in the tree, and keep track of the parents
     var cpath = findChildPath(curTabState.currentRoot, curTabState.currentNode, 1);
-    var foundparent = null;
+    var foundtwin = null;
     for (var i = cpath.length - 1; i >= 0; i--) {
       if (cpath[i].url == node.url) {
-        foundparent = cpath[i];
+        //this is the twin brother
+        foundtwin = cpath[i];
+        break;
       }
     }
-    if (foundparent) {
+    if (foundtwin) {
       console.log("Found that url in this node's history, moving back up the tree");
-      addChild(foundparent, node);
-      curTabState.currentNode = node;
+
+      foundtwin.timestamp = now();
+      curTabState.currentNode = foundtwin;
+      //and we are going to ignore the newly created 'node'
+      node = foundtwin;
     } else {
       console.log("Adding as child.");
       addChild(curTabState.currentNode,node);
