@@ -70,7 +70,7 @@ function getAllRootNodes(callback) {
 //this requires chrome 11+
 var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
 //var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
-//var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
 
 var histreeDB;
 
@@ -169,7 +169,7 @@ function getObjects(store, callback) {
 		}
 	}	
 }
-function getObjectsByIndex(store, index, reverse, callback) {
+function getObjectsByIndex(store, index, reverse, startValue, callback) {
 	if (!histreeDB) {
 		console.log("getObjects failed; no histreeDB found!");
 		return;
@@ -177,8 +177,8 @@ function getObjectsByIndex(store, index, reverse, callback) {
 	var transaction = histreeDB.transaction(store, "readonly");
 	var objectStore = transaction.objectStore(store);
 	var idx = objectStore.index("timestamp");
-
-	var req = (reverse) ? idx.openCursor(null, "prev") : idx.openCursor();
+	var keyRange = (startValue) ? IDBKeyRange.upperBound(startValue, true) : null;
+	var req = (reverse) ? idx.openCursor(keyRange, "prev") : idx.openCursor(keyRange);
 	req.onsuccess = function (evt) {
 		var cursor = evt.target.result;
 		if (cursor) {
@@ -201,10 +201,10 @@ function putNode(node, callback) {
 function getNode(id, callback) {
 	getObject("nodes", id, callback);
 }
-function getLatestNodes(callback) {
+function getLatestNodes(lastSeen, callback) {
 	//mark we want latest first
 	//if the callback returns false, the cursor stops
-	getObjectsByIndex("nodes","timestamp",true, callback);
+	getObjectsByIndex("nodes", "timestamp", true, lastSeen, callback);
 }
 
 /*setTimeout(function() {

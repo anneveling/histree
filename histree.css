@@ -31,8 +31,6 @@ hr {
     white-space: nowrap;
     position: relative;
 }
-.node:hover {
-}
 
 .node .wrapper {
     overflow: hidden;
@@ -126,21 +124,34 @@ hr {
 .clear {
     clear: both;
 }
+.hour-section {
+    box-shadow: 8px 0 8px 0 silver;
+    border-bottom: 2px solid #c6c6c6;
+    margin: 16px 0 16px 0;
+}
 .hour {
     border-top: 2px solid #c6c6c6;
+    position: relative;
 }
 .row0 {
-    background-color: whitesmoke;
+    background-color: #f5f5f5;
 
 }
 .row1 {
-    background-color: ghostwhite;
+    background-color: #fafafa;
 
 }
 .hourlabel {
+    position: absolute;
+    display: inline-block;
     border: 2px solid #c6c6c6;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-radius: 8px;
     background-color: white;
     padding: 2px;
+    top: -1em;
+    left: -16px;
+}
+.hour-end {
+    border-top: 2px solid #c6c6c6;
+    margin-bottom: 8px;
 }
