@@ -51,6 +51,12 @@ function buildHistoryTree(startTimestamp) {
       //is this a new hour?
       var nodeHour = extractHour(node.timestamp);
       if (nodeHour != thisHour) {
+        //is this exactly the next hour, or is there some time in between?
+        //if so, mark with a new hoursection
+        if ((thisHour) && (nodeHour != thisHour - 1)) {
+          section = $("<div/>").addClass("hour-section").appendTo("#history");
+        }
+
         //make new hourdiv
         var hourContainer = $("<div/>").addClass("hour").addClass("row"+thisRow).addClass("float-container").appendTo(section);
         thisHourDiv = $("<div/>").appendTo(hourContainer);

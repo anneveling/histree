@@ -127,7 +127,8 @@ hr {
 .hour-section {
     box-shadow: 8px 0 8px 0 silver;
     border-bottom: 2px solid #c6c6c6;
-    margin: 16px 0 16px 0;
+    border-left: 1px solid #f0f0f0;
+    margin: 32px 0 32px 0;
 }
 .hour {
     border-top: 2px solid #c6c6c6;
