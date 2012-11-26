@@ -45,7 +45,43 @@ function buildNode(parent, node) {
 function buildHistoryTree() {
   $('#history').html('');
 
-  getAllRootNodes(function(nodes) {
+  console.log("building history tree");
+  //group by hour
+  var thisHour = 0;
+  var thisHourDiv = null;
+  var thisRow = 0;
+
+  getLatestNodes(function(key, node) {
+    console.log("adding div for root node: " + node.id);
+      console.log(node);
+
+      //is this a new hour?
+      if (node.lastHour != thisHour) {
+        //next
+        if (thisHourDiv) {
+          $("<div/>").addClass("clear").appendTo(thisHourDiv);
+        }
+        thisHourDiv = $("<div/>").addClass("hour").addClass("row"+thisRow).appendTo('#history');
+        var prettyHour = showTime(node.lastHour * 60 * 60 * 1000);
+        $("<div/>").append($("<span/>").addClass("hourlabel").text(prettyHour)).appendTo(thisHourDiv);
+
+        thisHour = node.lastHour;
+        thisRow = (thisRow + 1) % 2;
+      }
+
+      var c = create("div").addClass("treecontainer");
+      var cid = "c_"+node.id;
+      c.attr("id", cid);
+ 
+      thisHourDiv.append(c);
+
+      buildNode(c, node);
+
+    //mark that we want more
+    return true;
+  });
+
+  /*getAllRootNodes(function(nodes) {
     //sort by lastTimeStamp
     //store lastTimeStamp on each node for sorting
     for (var i=0; i < nodes.length; i++) {
@@ -93,12 +129,14 @@ function buildHistoryTree() {
     if (thisHourDiv) {
           $("<div/>").addClass("clear").appendTo(thisHourDiv);
     }
-  });  
+  });  */
 }
 
 
 function init() {
-  buildHistoryTree();
+  initDatabase(function() {
+    buildHistoryTree();
+  });
 
   $('#showStorage').click(showStorageContent);
   $('#clearStorage').click(clearStorage);

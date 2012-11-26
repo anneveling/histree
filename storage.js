@@ -66,39 +66,151 @@ function getAllRootNodes(callback) {
 	});	
 }
 
-//localStorage version
-function clearStorage() {
-	localStorage.clear();
-}
-function storeObject(key, obj) {
-	localStorage.setItem(key, JSON.stringify(obj));
-}
-function getObject(key) {
-	var value = localStorage.getItem(key);
-    return value && JSON.parse(value);
-}
-function forObjectsWithKey(keyFilter, callback) {
-	for (var i=0; i < localStorage.length; i++) {
-		var key = localStorage.key(i);
-		if (keyFilter(key)) {
-			callback(getObject(key));
+//IndexedDB version
+//this requires chrome 11+
+var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+//var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+//var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+
+var histreeDB;
+
+function initDatabase(callback) {
+	console.log("Initializing database");
+	var req = indexedDB.open("histree");
+	req.onsuccess = function (evt) {
+		histreeDB = req.result;
+		histreeDB.onerror = function(e) {
+			console.log("***ERROR in IndexedDB***");
+			console.dir(e.target);
+		};
+		//Chrome does not fire onupgradeneeded event correctly
+		if (!histreeDB.objectStoreNames.contains("nodes")) {
+			var versionReq = histreeDB.setVersion("1");
+			versionReq.onsuccess = function (evt) {
+				console.log("IndexedDB upgrading (chrome version)...")
+				var objectStore = histreeDB.createObjectStore("nodes", {
+					keyPath: "id",
+					autoIncrement: false,
+				});
+				objectStore.createIndex("timestamp","timestamp",{unique: false});	
+			}
 		}
+		if (callback) callback();
+	};
+	req.onerror = function (evt) {
+		console.log("IndexedDB initialization error: "+evt.target.errorCode);
+	};
+	req.onupgradeneeded = function (evt) {
+		console.log("IndexedDB upgrading...")
+		var objectStore = evt.currentTarget.result.createObjectStore("nodes", {
+			keyPath: "id",
+			autoIncrement: false
+		});
+		objectStore.createIndex("timestamp","timestamp",{unique: false});
+	};
+
+}
+
+function putObject(store, obj, callback) {
+	if (!histreeDB) {
+		console.log("storeObject failed; no histreeDB found!");
+		return;
+	}
+	var transaction = histreeDB.transaction(store, "readwrite");
+	var objectStore = transaction.objectStore(store);
+	//put adds or updates
+	var req = objectStore.put(obj);
+	req.onerror = function(evt) {
+		console.log("Error saving object!");
+	};
+	req.onsuccess = function(evt) {
+		var theid = evt.target.result;
+		console.log("Successfully stored: " + theid);
+		if (callback) callback(theid);
+	};
+}
+
+function getObject(store, key, callback) {
+	if (!histreeDB) {
+		console.log("getObject failed; no histreeDB found!");
+		return;
+	}
+	var transaction = histreeDB.transaction(store, "readonly");
+	var objectStore = transaction.objectStore(store);
+	var req = objectStore.get(key);
+	req.onerror = function(evt) {
+		console.log("Error finding object with key "+key);
+	}
+	req.onsuccess = function(evt) {
+		console.log("found a result for key: "+key);
+		callback(req.result);
 	}
 }
-function forObjects(filter, callback) {
-	for (var i=0; i < localStorage.length; i++) {
-		var key = localStorage.key(i);
-		var value = getObject(key);
-		if (filter(value)) {
-			callback(value);
-		}
+
+function getObjects(store, callback) {
+	if (!histreeDB) {
+		console.log("getObjects failed; no histreeDB found!");
+		return;
 	}
+	var transaction = histreeDB.transaction(store, "readonly");
+	var objectStore = transaction.objectStore(store);
+	var req = objectStore.openCursor();
+	req.onsuccess = function (evt) {
+		var cursor = evt.target.result;
+		if (cursor) {
+			var ok = callback(cursor.key, cursor.value);
+			if (ok) {
+				cursor.continue();
+			} else {
+				console.log("stopping cursor because the callback told me so");
+			}
+		} else {
+			console.log("cursor: no more");
+		}
+	}	
 }
-function forNodes(callback) {
-	forObjectsWithKey(function(key) {
-		return key.substring(0,1) == "h" 
-	}, callback);
+function getObjectsByIndex(store, index, reverse, callback) {
+	if (!histreeDB) {
+		console.log("getObjects failed; no histreeDB found!");
+		return;
+	}
+	var transaction = histreeDB.transaction(store, "readonly");
+	var objectStore = transaction.objectStore(store);
+	var idx = objectStore.index("timestamp");
+
+	var req = (reverse) ? idx.openCursor(null, "prev") : idx.openCursor();
+	req.onsuccess = function (evt) {
+		var cursor = evt.target.result;
+		if (cursor) {
+			var ok = callback(cursor.key, cursor.value);
+			if (ok) {
+				cursor.continue();
+			} else {
+				console.log("stopping cursor because the callback told me so");
+			}
+		} else {
+			console.log("cursor: no more");
+		}
+	}	
 }
 
+//helper accessors for Nodes specifically
+function putNode(node, callback) {
+	putObject("nodes", node, callback);
+}
+function getNode(id, callback) {
+	getObject("nodes", id, callback);
+}
+function getLatestNodes(callback) {
+	//mark we want latest first
+	//if the callback returns false, the cursor stops
+	getObjectsByIndex("nodes","timestamp",true, callback);
+}
 
-
+/*setTimeout(function() {
+	console.log("test enum");
+	getObjectsByIndex("nodes","timestamp",true, function (key, value) {
+		console.log("enumerated "+key + " with timestamp "+value.timestamp);
+		return true;
+	});
+},500);*/

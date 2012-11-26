@@ -24,6 +24,7 @@ function HistoryNode(url,title) {
   	_mv : 0,
   	_type : "hnode",
   	timestamp : n,
+    created : n,
   	"url" : url,
   	"title" : title,
   	children : []

@@ -80,7 +80,10 @@ function handleUpdate(tab) {
   }
 
   putTabState(curTabState);
-  save(curTabState.currentRoot);
+  //save(curTabState.currentRoot);
+
+  curTabState.currentRoot.timestamp = now();
+  putNode(curTabState.currentRoot);
 
   var rootToStore = curTabState.currentRoot; // capture root to avoid multi-threading bugs.
 
@@ -102,7 +105,10 @@ function handleUpdate(tab) {
  						//now updated
  						//chrome does this lazily...
  						node.favIconUrl = t.favIconUrl;
- 						save(rootToStore);
+ 						//save(rootToStore);
+
+            rootToStore.timestap = now();
+            putNode(rootToStore);
             // console.log("Saved favicon for : " + node.url);
  					}
  				}
@@ -120,11 +126,18 @@ function  storeWindowThumbnailToNode(node,rootToStore,tabId) {
       chrome.tabs.captureVisibleTab(tab.windowId, function (dataUrl) {
         console.log("Adding thumbnail to " + node.url);
         node.thumbnailUrl = dataUrl;
-        save(rootToStore);
+        node.timestamp = now(); //mark this tab to be seen now so it shows up higher
+        //save(rootToStore);
+
+        rootToStore.timestamp = now();
+        putNode(rootToStore);
       });
     }
   });
 }
+
+//no callback here yet
+initDatabase();
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
       console.log("Tab activate! " + activeInfo.tabId);
