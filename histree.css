@@ -139,6 +139,8 @@ hr {
 }
 .hourlabel {
     border: 2px solid #c6c6c6;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
     background-color: white;
     padding: 2px;
 }
