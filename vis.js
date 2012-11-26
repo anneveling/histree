@@ -123,9 +123,23 @@ function drawTree(container,tree) {
 
               var node_tab_outer = $("<div/>").addClass("node_tab").appendTo(node_label);
               var node_tab = $("<div/>").addClass("wrapper").appendTo(node_tab_outer);
+
                
 
               var node_content = $("<div/>").addClass("node_content").appendTo(node_label);
+
+              //is this a still existing tab?
+              chrome.tabs.get(node.data.tabId, function(tab) {
+                if ((tab) && (tab.url == node.data.url)) {
+                  //still the same url, so you can close this
+                  var closeButton = $("<a/>").attr("href","#").attr("title","close this tab").addClass("x-close").html("&times;").appendTo(node_content);
+                  closeButton.click(function() {
+                    chrome.tabs.remove(tab.id);
+                    closeButton.hide();
+                  });
+                }
+              });
+
 
               var node_wrapper =  $("<div/>").addClass("wrapper").appendTo(node_content);
 
@@ -186,7 +200,14 @@ function drawTree(container,tree) {
       });
 
   function normalizeForDisplay(i,node) {
-    node.data = { title: node.title , url: node.url , timestamp: node.timestamp , favIconUrl : node.favIconUrl, thumbnailUrl: node.thumbnailUrl};
+    node.data = {
+      title: node.title,
+      url: node.url,
+      timestamp: node.timestamp,
+      favIconUrl: node.favIconUrl,
+      thumbnailUrl: node.thumbnailUrl,
+      tabId: node.tabId
+    };
     $.each(node.children,normalizeForDisplay)
   }
   normalizeForDisplay(0,tree);

@@ -68,6 +68,18 @@ hr {
     background-color: white;
     z-index: 1;
 }
+.node_content .x-close {
+    position: absolute;
+    width: 8px; height: 8px;
+    right: 0px;
+    top: -24px;
+    color: #c6c6c6;
+    font-weight: bold;
+}
+.x-close:hover {
+    text-decoration: none;
+    color: #a0a0a0;
+}
 
 .node .body {
     width: 180px;
