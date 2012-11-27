@@ -42,9 +42,8 @@ hr {
     top: 0px;
     left: 8px;
     display: inline-block;
-    max-width: 160px;
-    min-width: 100px;
-    overflow: hidden;
+    max-width: 180px;
+    min-width: 110px;
     border: 2px solid #c6c6c6;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -52,17 +51,49 @@ hr {
     background-color: white;
     text-align: left;
     z-index: 42;
-    padding: 0 6px 0 6px;
+    padding: 0 4px 0 4px;
+    vertical-align: middle;
 }
 .node .node_tabs a {
     margin-right: 4px;
     overflow: hidden;
 }
+.node .fav {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 16px; 
+    height: 16px;
+    border: 0;
+    border-top-left-radius: 4px;
+}
+
+.node .tab-title {
+    margin-left: 20px;
+}
+.normal-title {
+    display: inline-block;
+    margin-top: 4px;
+}
+.google-query {
+    display: inline-block;
+    text-align: left;
+    border: 1px solid #c6c6c6;
+    border-radius: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-top: 2px;
+    background-color: #fafafa;
+    vertical-align: middle;
+    max-width: 150px;
+    overflow: hidden;
+}
+
 .node .node_content {
     position: absolute;
     top: 24px;
     bottom: -4px;
-    width: 196px;
+    width: 220px;
     border: 2px solid #c6c6c6;
     border-radius: 8px;
     background-color: white;
@@ -82,8 +113,8 @@ hr {
 }
 
 .node .body {
-    width: 180px;
-    height: 160px;
+    width: 220px;
+    height: 135px;
     position: relative;
     
 
@@ -107,7 +138,11 @@ hr {
     left: 0;
     right: 0;
 }
-.node img {
+.node .img-container .thumb {
+    max-width: 220px;
+    max-height: 135px;
+}
+.node .img-container img {
     border: 0;
     padding: 0;
     margin: auto;
@@ -116,22 +151,12 @@ hr {
     left: 0;
     right: 0;
 }
-.node .img-container .thumb {
-    max-width: 180px;
-    max-height: 160px;
-}
 .node .img-container-small .thumb {
-    max-width: 180px;
-    max-height: 120px;
-}
-.node .favicon {
-    max-width: 32px; max-height: 32px; border: 0;
+    max-width: 220px;
+    max-height: 135px;
 }
 
-.node a {
 
-
-}
 .node .time {
     text-align: right;
     color: gray;
@@ -145,10 +170,7 @@ hr {
     background-color: white;
 }
 
-.google-query {
-    text-align: left;
-    width: 100%;
-}
+
 
 .details {
 }
@@ -158,7 +180,7 @@ hr {
 .hour-section {
     box-shadow: 8px 0 8px 0 silver;
     border-bottom: 2px solid #c6c6c6;
-    border-left: 1px solid #f0f0f0;
+    border-left: 1px solid #f6f6f0;
     margin: 32px 0 32px 0;
 }
 .hour {

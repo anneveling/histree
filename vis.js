@@ -1,8 +1,8 @@
 
 
-var LABEL_WIDTH = 200;
-var LABEL_HEIGHT = 200;
-var LABEL_STEP = 50;
+var LABEL_WIDTH = 220;
+var LABEL_HEIGHT = 165;
+var LABEL_STEP = 40;
 
 //helpers
 
@@ -158,23 +158,19 @@ function drawTree(container,tree) {
               		node_label.addClass("query");
               		isSpecial = true;
                   
-                  $("<span/>").addClass("input-block-level").addClass("uneditable-input").addClass("google-query").text(title).appendTo(body);
+                  //$("<span/>").addClass("input-block-level").addClass("uneditable-input").addClass("google-query").text(title).appendTo(body);
               	}
               }
-              $("<a/>").attr("href",node.data.url).attr("title",title).text(title).appendTo(node_tab);
-
-              var imgContainer = $("<div/>").addClass(isSpecial ? "img-container-small" : "img-container").appendTo(body);
-
-              var imgIcon = null;
               if (node.data.favIconUrl) {
-                imgIcon = $("<img/>").appendTo(imgContainer);
-                imgIcon.addClass("favicon").attr("src", node.data.favIconUrl);
+                $("<img/>").addClass("fav").attr("src", node.data.favIconUrl).appendTo(node_tab);
+
               }
+              $("<a/>").attr("href",node.data.url).attr("title",title).addClass("tab-title").addClass(isSpecial ? "google-query" : "normal-title").text(title).appendTo(node_tab);
+              var imgContainer = $("<div/>").addClass("img-container").appendTo(body);
 
               if (node.data.thumbnailUrl) {
                 setTimeout(function () {
                     var imgThumb = $("<img/>").appendTo(imgContainer);
-                    if (imgIcon) imgIcon.hide();
                     imgThumb.addClass("thumb").attr("src", node.data.thumbnailUrl);
                 },200);
               }
